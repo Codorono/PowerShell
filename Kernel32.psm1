@@ -84,45 +84,62 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 
 function Set-ConsoleBackgroundColor
 {
-    # get color
-
-    $Color = $null
-
-    # use registry default color
+    $Color = [System.Drawing.Color]::Empty
 
     if ($args.Count -eq 0)
     {
-        $Color = (Get-ItemProperty -Path "HKCU:\Console" -Name "ColorTable00").ColorTable00
+        # get default color
+
+        $Color = [System.Drawing.ColorTranslator]::FromWin32((Get-ItemPropertyValue -Path "HKCU:\Console" -Name "ColorTable00"))
     }
 
-    # use numeric color
-
-    elseif (($args.Count -eq 1) -and ($args[0] -is [int]))
+    elseif ($args.Count -eq 1)
     {
-        $Color = $args[0]
+        $Arg = $args[0]
+
+        # use integer color
+
+        if ($Arg -is [int])
+        {
+            $Color = [System.Drawing.ColorTranslator]::FromWin32($Arg)
+        }
+
+        # use html or named color
+
+        elseif ($Arg -is [string])
+        {
+            $Color = [System.Drawing.ColorTranslator]::FromHtml($Arg)
+        }
+
+        # use .net color
+
+        elseif ($Arg -is [System.Drawing.Color])
+        {
+            $Color = $Arg
+        }
+
+        # use rgb array
+
+        elseif (($Arg -is [System.Object[]]) -and ($Arg.Count -eq 3))
+        {
+            $Color = [System.Drawing.Color]::FromArgb($Arg[0], $Arg[1], $Arg[2])
+        }
     }
 
-    # lookup color in table
-
-    elseif (($args.Count -eq 1) -and ($args[0] -is [string]))
-    {
-        $Color = $Colors[$args[0]]
-    }
-
-    # use rgb color
+    # use rgb triple
 
     elseif ($args.Count -eq 3)
     {
         $Red, $Green, $Blue = $args
 
-        $Color = ($Red -band 0xFF) -bor (($Green -band 0xFF) -shl 8) -bor (($Blue -band 0xFF) -shl 16)
+        $Color = [System.Drawing.Color]::FromArgb($Red, $Green, $Blue)
     }
 
     # make sure color is valid
 
-    if ($Color -eq $null)
+    if ($Color.IsEmpty)
     {
-        throw "Set-ConsoleBackgroundColor: Invalid color: $args"
+        throw "Set-ConsoleBackgroundColor: Invalid color"
     }
 
     # get standard output handle
@@ -152,7 +169,167 @@ function Set-ConsoleBackgroundColor
 
             # set console background color
 
-            $ConsoleScreenBufferInfo.ColorTable[0] = $Color
+            $ConsoleScreenBufferInfo.ColorTable[0] = [System.Drawing.ColorTranslator]::ToWin32($Color)
+
+            # compensate for windows bug
+
+            $WindowRect = $ConsoleScreenBufferInfo.srWindow
+
+            $WindowRect.Right += 1
+            $WindowRect.Bottom += 1
+
+            $ConsoleScreenBufferInfo.srWindow = $WindowRect
+
+            # set console screen buffer info
+
+            if ([Win32.Kernel32]::SetConsoleScreenBufferInfoEx($StdOutputHandle, [ref] $ConsoleScreenBufferInfo) -eq 0)
+            {
+                throw (New-Object "System.ComponentModel.Win32Exception")
+            }
+        }
+    }
+}
+
+#===================================================================================================
+
+function Set-ConsoleColorScheme([string] $Scheme)
+{
+    $Colors = @()
+    $Attributes = 0x0007
+    $PopupAttributes = 0x00F5
+
+    if ($Scheme -eq "")
+    {
+        #get colors from registry
+
+        for ($Color = 0; $Color -lt 16; $Color++)
+        {
+            $Colors += Get-ItemPropertyValue -Path "HKCU:\Console" -Name ("ColorTable{0:d2}" -f $Color)
+        }
+
+        $Attributes = Get-ItemPropertyValue -Path "HKCU:\Console" -Name "ScreenColors"
+        $PopupAttributes = Get-ItemPropertyValue -Path "HKCU:\Console" -Name "PopupColors"
+    }
+
+    else
+    {
+        switch ($Scheme)
+        {
+            "Campbell"
+            {
+                $Colors = 0x0C0C0C, 0xDA3700, 0x0EA113, 0xDD963A, 0x1F0FC5, 0x981788, 0x009CC1, 0xCCCCCC,
+                    0x767676, 0xFF783B, 0x0CC616, 0xD6D661, 0x5648E7, 0x9E00B4, 0xA5F1F9, 0xF2F2F2
+            }
+
+            "Vintage"
+            {
+                $Colors = 0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x800080, 0x008080, 0xC0C0C0,
+                    0x808080, 0xFF0000, 0x00FF00, 0xFFFF00, 0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF
+            }
+
+            "OneHalfDark"
+            {
+                $Colors = 0x342C28, 0xEFAF61, 0x79C398, 0xC2B656, 0x756CE0, 0xDD78C6, 0x7BC0E5, 0xE4DFDC,
+                    0x74635A, 0xEFAF61, 0x79C398, 0xC2B656, 0x756CE0, 0xDD78C6, 0x7BC0E5, 0xE4DFDC
+            }
+
+            "OneHalfLight"
+            {
+                $Colors = 0x423A38, 0xBC8401, 0x4FA150, 0xB39709, 0x4956E4, 0xA426A6, 0x0183C1, 0xFAFAFA,
+                    0x5D524F, 0xEFAF61, 0x79C398, 0xC1B556, 0x756CDF, 0xDD77C5, 0x7AC0E4, 0xFFFFFF
+
+                $Attributes = 0x0070
+            }
+
+            "SolarizedDark"
+            {
+                $Colors = 0x423607, 0xD28B26, 0x009985, 0x98A12A, 0x2F32DC, 0x8236D3, 0x0089B5, 0xD5E8EE,
+                    0x362B00, 0x969483, 0x756E58, 0xA1A193, 0x164BCB, 0xC4716C, 0x837B65, 0xE3F6FD
+
+                $Attributes = 0x0089
+            }
+
+            "SolarizedLight"
+            {
+                $Colors = 0x423607, 0xD28B26, 0x009985, 0x98A12A, 0x2F32DC, 0x8236D3, 0x0089B5, 0xD5E8EE,
+                    0x362B00, 0x969483, 0x756E58, 0xA1A193, 0x164BCB, 0xC4716C, 0x837B65, 0xE3F6FD
+
+                $Attributes = 0x00FE
+            }
+
+            "TangoDark"
+            {
+                $Colors = 0x000000, 0xA46534, 0x069A4E, 0x9A9806, 0x0000CC, 0x7B5075, 0x00A0C4, 0xCFD7D3,
+                    0x535755, 0xCF9F72, 0x34E28A, 0xE2E234, 0x2929EF, 0xA87FAD, 0x4FE9FC, 0xECEEEE
+            }
+
+            "TangoLight"
+            {
+                $Colors = 0x000000, 0xA46534, 0x069A4E, 0x9A9806, 0x0000CC, 0x7B5075, 0x00A0C4, 0xCFD7D3,
+                    0x535755, 0xCF9F72, 0x34E28A, 0xE2E234, 0x2929EF, 0xA87FAD, 0x4FE9FC, 0xECEEEE
+
+                $Attributes = 0x00F8
+            }
+
+            "Windows10"
+            {
+                $Colors = 0x0C0C0C, 0xDA3700, 0x0EA113, 0xDD963A, 0x1F0FC5, 0x981788, 0x009CC1, 0xCCCCCC,
+                    0x767676, 0xFF783B, 0x0CC616, 0xD6D661, 0x5648E7, 0x9E00B4, 0xA5F1F9, 0xF2F2F2
+            }
+
+            "PowerShell"
+            {
+                $Colors = 0x0C0C0C, 0xDA3700, 0x0EA113, 0xDD963A, 0x1F0FC5, 0x562401, 0xF0EDEE, 0xCCCCCC,
+                    0x767676, 0xFF783B, 0x0CC616, 0xD6D661, 0x5648E7, 0x9E00B4, 0xA5F1F9, 0xF2F2F2
+
+                $Attributes = 0x0056
+                $PopupAttributes = 0x00F3
+            }
+
+            "Pmac"
+            {
+                $Colors = 0x000000, 0xEFAF61, 0x0CC616, 0xE2E234, 0x5648E7, 0xDD78C6, 0x4FE9FC, 0xF2F2F2,
+                    0xC0C0C0, 0xEFAF61, 0x0CC616, 0xE2E234, 0x5648E7, 0xDD78C6, 0x4FE9FC, 0xFFFFFF
+            }
+
+            default { throw "Set-ConsoleColorScheme: Invalid scheme: '$Scheme'" }
+        }
+    }
+
+    # get standard output handle
+
+    $StdOutputHandle = [Win32.Kernel32]::GetStdHandle([STD_HANDLE]::OUTPUT)
+
+    if (($StdOutputHandle -ne [System.IntPtr]::Zero) -and ($StdOutputHandle -ne $INVALID_HANDLE_VALUE))
+    {
+        # make sure standard output is console buffer
+
+        $NotUsed = 0
+
+        if ([Win32.Kernel32]::GetConsoleMode($StdOutputHandle, [ref] $NotUsed) -ne 0)
+        {
+            # create console screen buffer info structure
+
+            $ConsoleScreenBufferInfo = New-Object "Win32.Kernel32+CONSOLE_SCREEN_BUFFER_INFOEX"
+
+            $ConsoleScreenBufferInfo.cbSize = [System.Runtime.InteropServices.Marshal]::SizeOf($ConsoleScreenBufferInfo)
+
+            # get console screen buffer info
+
+            if ([Win32.Kernel32]::GetConsoleScreenBufferInfoEx($StdOutputHandle, [ref] $ConsoleScreenBufferInfo) -eq 0)
+            {
+                throw (New-Object "System.ComponentModel.Win32Exception")
+            }
+
+            # set console colors
+
+            for ($Color = 0; $Color -lt 16; $Color++)
+            {
+                $ConsoleScreenBufferInfo.ColorTable[$Color] = $Colors[$Color]
+            }
+
+            $ConsoleScreenBufferInfo.wAttributes = $Attributes
+            $ConsoleScreenBufferInfo.wPopupAttributes = $PopupAttributes
 
             # compensate for windows bug
 
@@ -231,160 +408,6 @@ enum PROCESS_MODE_BACKGROUND
 }
 
 Set-Variable -Name "INVALID_HANDLE_VALUE" -Value ([System.IntPtr] -1) -Option Constant
-
-#===================================================================================================
-
-$Colors =
-@{
-    "AliceBlue" = 0xFFF8F0
-    "AntiqueWhite" = 0xD7EBFA
-    "Aqua" = 0xFFFF00
-    "Aquamarine" = 0xD4FF7F
-    "Azure" = 0xFFFFF0
-    "Beige" = 0xDCF5F5
-    "Bisque" = 0xC4E4FF
-    "Black" = 0x000000
-    "BlanchedAlmond" = 0xCDEBFF
-    "Blue" = 0xFF0000
-    "BlueViolet" = 0xE22B8A
-    "Brown" = 0x2A2AA5
-    "BurlyWood" = 0x87B8DE
-    "CadetBlue" = 0xA09E5F
-    "Chartreuse" = 0x00FF7F
-    "Chocolate" = 0x1E69D2
-    "Coral" = 0x507FFF
-    "CornflowerBlue" = 0xED9564
-    "Cornsilk" = 0xDCF8FF
-    "Crimson" = 0x3C14DC
-    "Cyan" = 0xFFFF00
-    "DarkBlue" = 0x8B0000
-    "DarkCyan" = 0x8B8B00
-    "DarkGoldenrod" = 0x0B86B8
-    "DarkGray" = 0xA9A9A9
-    "DarkGreen" = 0x006400
-    "DarkKhaki" = 0x6BB7BD
-    "DarkMagenta" = 0x8B008B
-    "DarkOliveGreen" = 0x2F6B55
-    "DarkOrange" = 0x008CFF
-    "DarkOrchid" = 0xCC3299
-    "DarkRed" = 0x00008B
-    "DarkSalmon" = 0x7A96E9
-    "DarkSeaGreen" = 0x8BBC8F
-    "DarkSlateBlue" = 0x8B3D48
-    "DarkSlateGray" = 0x4F4F2F
-    "DarkTurquoise" = 0xD1CE00
-    "DarkViolet" = 0xD30094
-    "DeepPink" = 0x9314FF
-    "DeepSkyBlue" = 0xFFBF00
-    "DimGray" = 0x696969
-    "DodgerBlue" = 0xFF901E
-    "Firebrick" = 0x2222B2
-    "FloralWhite" = 0xF0FAFF
-    "ForestGreen" = 0x228B22
-    "Fuchsia" = 0xFF00FF
-    "Gainsboro" = 0xDCDCDC
-    "GhostWhite" = 0xFFF8F8
-    "Gold" = 0x00D7FF
-    "Goldenrod" = 0x20A5DA
-    "Gray" = 0x808080
-    "Green" = 0x008000
-    "GreenYellow" = 0x2FFFAD
-    "Honeydew" = 0xF0FFF0
-    "HotPink" = 0xB469FF
-    "IndianRed" = 0x5C5CCD
-    "Indigo" = 0x82004B
-    "Ivory" = 0xF0FFFF
-    "Khaki" = 0x8CE6F0
-    "Lavender" = 0xFAE6E6
-    "LavenderBlush" = 0xF5F0FF
-    "LawnGreen" = 0x00FC7C
-    "LemonChiffon" = 0xCDFAFF
-    "LightBlue" = 0xE6D8AD
-    "LightCoral" = 0x8080F0
-    "LightCyan" = 0xFFFFE0
-    "LightGoldenrodYellow" = 0xD2FAFA
-    "LightGray" = 0xD3D3D3
-    "LightGreen" = 0x90EE90
-    "LightPink" = 0xC1B6FF
-    "LightSalmon" = 0x7AA0FF
-    "LightSeaGreen" = 0xAAB220
-    "LightSkyBlue" = 0xFACE87
-    "LightSlateGray" = 0x998877
-    "LightSteelBlue" = 0xDEC4B0
-    "LightYellow" = 0xE0FFFF
-    "Lime" = 0x00FF00
-    "LimeGreen" = 0x32CD32
-    "Linen" = 0xE6F0FA
-    "Magenta" = 0xFF00FF
-    "Maroon" = 0x000080
-    "MediumAquamarine" = 0xAACD66
-    "MediumBlue" = 0xCD0000
-    "MediumOrchid" = 0xD355BA
-    "MediumPurple" = 0xDB7093
-    "MediumSeaGreen" = 0x71B33C
-    "MediumSlateBlue" = 0xEE687B
-    "MediumSpringGreen" = 0x9AFA00
-    "MediumTurquoise" = 0xCCD148
-    "MediumVioletRed" = 0x8515C7
-    "MidnightBlue" = 0x701919
-    "MintCream" = 0xFAFFF5
-    "MistyRose" = 0xE1E4FF
-    "Moccasin" = 0xB5E4FF
-    "NavajoWhite" = 0xADDEFF
-    "Navy" = 0x800000
-    "OldLace" = 0xE6F5FD
-    "Olive" = 0x008080
-    "OliveDrab" = 0x238E6B
-    "Orange" = 0x00A5FF
-    "OrangeRed" = 0x0045FF
-    "Orchid" = 0xD670DA
-    "PaleGoldenrod" = 0xAAE8EE
-    "PaleGreen" = 0x98FB98
-    "PaleTurquoise" = 0xEEEEAF
-    "PaleVioletRed" = 0x9370DB
-    "PapayaWhip" = 0xD5EFFF
-    "PeachPuff" = 0xB9DAFF
-    "Peru" = 0x3F85CD
-    "Pink" = 0xCBC0FF
-    "Plum" = 0xDDA0DD
-    "PowderBlue" = 0xE6E0B0
-    "Purple" = 0x800080
-    "Red" = 0x0000FF
-    "RosyBrown" = 0x8F8FBC
-    "RoyalBlue" = 0xE16941
-    "SaddleBrown" = 0x13458B
-    "Salmon" = 0x7280FA
-    "SandyBrown" = 0x60A4F4
-    "SeaGreen" = 0x578B2E
-    "SeaShell" = 0xEEF5FF
-    "Sienna" = 0x2D52A0
-    "Silver" = 0xC0C0C0
-    "SkyBlue" = 0xEBCE87
-    "SlateBlue" = 0xCD5A6A
-    "SlateGray" = 0x908070
-    "Snow" = 0xFAFAFF
-    "SpringGreen" = 0x7FFF00
-    "SteelBlue" = 0xB48246
-    "Tan" = 0x8CB4D2
-    "Teal" = 0x808000
-    "Thistle" = 0xD8BFD8
-    "Tomato" = 0x4763FF
-    "Turquoise" = 0xD0E040
-    "Violet" = 0xEE82EE
-    "Wheat" = 0xB3DEF5
-    "White" = 0xFFFFFF
-    "WhiteSmoke" = 0xF5F5F5
-    "Yellow" = 0x00FFFF
-    "YellowGreen" = 0x32CD9A
-    "Admin" = 0x000020
-    "Dev" = 0x002000
-    "AdminDev" = 0x002020
-    "PowerShell" = 0x562401
-    "Terminal" = 0x0C0C0C
-    "Desktop" = 0xB16300
-    "UclaBlue" = 0xD3994B
-    "UclaGold" = 0x2ECBFD
-}
 
 #===================================================================================================
 

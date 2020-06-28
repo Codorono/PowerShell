@@ -64,3 +64,46 @@ function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
 }
 
 #===================================================================================================
+
+function Get-Color
+{
+    $Color = [System.Drawing.Color]::Empty
+
+    if ($args.Count -eq 1)
+    {
+        $Arg = $args[0]
+
+        # use integer color
+
+        if ($Arg -is [int])
+        {
+            $Color = [System.Drawing.ColorTranslator]::FromWin32($Arg)
+        }
+
+        # use string color
+
+        elseif ($Arg -is [string])
+        {
+            $Color = [System.Drawing.ColorTranslator]::FromHtml($Arg)
+        }
+
+        # use rgb array
+
+        elseif (($Arg -is [System.Object[]]) -and ($Arg.Count -eq 3))
+        {
+            $Color = [System.Drawing.Color]::FromArgb($Arg[0], $Arg[1], $Arg[2])
+        }
+    }
+
+    # use rgb triple
+
+    elseif ($args.Count -eq 3)
+    {
+        $Red, $Green, $Blue = $args
+
+        $Color = [System.Drawing.Color]::FromArgb($Red, $Green, $Blue)
+    }
+
+    $Color
+}
+#===================================================================================================
