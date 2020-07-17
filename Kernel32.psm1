@@ -82,6 +82,13 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 
 #===================================================================================================
 
+function Get-ConsoleWindow
+{
+    [Win32.Kernel32]::GetConsoleWindow();
+}
+
+#===================================================================================================
+
 function Set-ConsoleBackgroundColor
 {
     $Color = [System.Drawing.Color]::Empty
@@ -292,6 +299,12 @@ function Set-ConsoleColorScheme([string] $Scheme)
                     0xC0C0C0, 0xEFAF61, 0x0CC616, 0xE2E234, 0x5648E7, 0xDD78C6, 0x4FE9FC, 0xFFFFFF
             }
 
+            "PmacLight"
+            {
+                $Colors = 0xFFFFFF, 0xFF0000, 0x008000, 0xFF8000, 0x0000FF, 0xFF00FF, 0x0080FF, 0x000000,
+                    0x404040, 0xFF0000, 0x008000, 0xFF8000, 0x0000FF, 0xFF00FF, 0x0080FF, 0x000000
+            }
+
             default { throw "Set-ConsoleColorScheme: Invalid scheme: '$Scheme'" }
         }
     }
@@ -473,6 +486,9 @@ public static extern uint GetPriorityClass(System.IntPtr hProcess);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetPriorityClass(System.IntPtr hProcess, uint uPriorityClass);
+
+[DllImport("kernel32.dll", ExactSpelling = true)]
+public static extern System.IntPtr GetConsoleWindow();
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int GetConsoleMode(System.IntPtr hConsoleHandle, out uint lpMode);
