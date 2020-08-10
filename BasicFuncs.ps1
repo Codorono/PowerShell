@@ -35,6 +35,15 @@ function Test-64BitSystem
 
 #===================================================================================================
 
+function Test-VirtualPC
+{
+    $Baseboard = Get-CimInstance -Namespace "root\CIMV2" -ClassName "Win32_Baseboard"
+
+    ($Baseboard.Manufacturer -eq "Microsoft Corporation") -and ($Baseboard.Product -eq "Virtual Machine")
+}
+
+#===================================================================================================
+
 function Test-Administrator
 {
     $CurrentUser = New-Object "System.Security.Principal.WindowsPrincipal" `
