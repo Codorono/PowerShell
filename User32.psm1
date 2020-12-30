@@ -165,11 +165,11 @@ enum MB_MISC
 
 $MemberDefinition =
 @"
-[DllImport("user32", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int MessageBoxW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] String lpText,
     [MarshalAs(UnmanagedType.LPWStr)] String lpCaption, uint uType);
 
-[DllImport("user32", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int MessageBoxTimeoutW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] String lpText,
     [MarshalAs(UnmanagedType.LPWStr)] String lpCaption, uint uType, ushort wLanguageId, uint dwMilliseconds);
 "@

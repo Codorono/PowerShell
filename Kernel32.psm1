@@ -1,5 +1,12 @@
 ﻿#===================================================================================================
 
+function Beep([uint] $Freq = 750, [uint] $Duration = 250)
+{
+    [void] [Win32.Kernel32]::Beep($Freq, $Duration)
+}
+
+#===================================================================================================
+
 function Out-Debug
 {
     [CmdletBinding()]
@@ -469,7 +476,11 @@ public struct MEMORY_BASIC_INFORMATION
     public uint Type;
 }
 
-[DllImport("kernel32", ExactSpelling = true)]
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool Beep(uint uFreq, uint uDuration);
+
+[DllImport("kernel32.dll", ExactSpelling = true)]
 public static extern void OutputDebugStringW([MarshalAs(UnmanagedType.LPWStr)] String lpOutputString);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
