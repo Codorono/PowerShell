@@ -115,4 +115,43 @@ function Get-Color
 
     $Color
 }
+
+#===================================================================================================
+
+function Search-Path([string] $File)
+{
+    # WHERE.exe "$File"
+
+    foreach ($Path in ($Env:Path -split ";"))
+    {
+        if (Test-Path (Join-Path $Path $File))
+        {
+            Get-ChildItem -Path (Join-Path $Path $File) -File | ForEach-Object { $_.FullName }
+        }
+    }
+}
+
+#===================================================================================================
+
+function Test-SearchPath([string] $File)
+{
+    # WHERE.exe /q "$File"
+    # $LastExitCode -eq 0
+
+    # Get-Command -Name $File -CommandType "Application" -ErrorAction "SilentlyContinue"
+
+    $Result = $false
+
+    foreach ($Path in ($Env:Path -split ";"))
+    {
+        if (Test-Path (Join-Path $Path $File))
+        {
+            $Result = $true
+            break
+        }
+    }
+
+    $Result
+}
+
 #===================================================================================================
