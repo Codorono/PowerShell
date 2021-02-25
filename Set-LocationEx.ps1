@@ -32,7 +32,7 @@
 
     if (-not (Test-Path $LocHistFilePath)) { New-Item -Path $LocHistFilePath | Out-Null }
 
-    #get current location
+    # get current location
 
     $PathInfo = $ExecutionContext.SessionState.Path.CurrentLocation
 

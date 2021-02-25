@@ -214,7 +214,7 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
     if ($Scheme -eq "")
     {
-        #get colors from registry
+        # get colors from registry
 
         for ($Color = 0; $Color -lt 16; $Color++)
         {
