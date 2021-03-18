@@ -27,22 +27,32 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
     {
         $Location = $_
 
-        # look for location in list
+        # make sure location exists
 
-        $Index = $LocationList.IndexOf($Location)
-
-        if ($Index -ne -1)
+        if (-not (Test-Path $Location))
         {
-            # remove previous location from list
-
-            $LocationList.RemoveAt($Index)
-
             if ($Verbose) { "Deleted $Location" }
         }
 
-        # add location to end of list
+        else
+        {
+            # look for location in list
 
-        $LocationList.Add($Location) | Out-Null
+            $Index = $LocationList.IndexOf($Location)
+
+            if ($Index -ne -1)
+            {
+                # remove previous location from list
+
+                $LocationList.RemoveAt($Index)
+
+                if ($Verbose) { "Removed $Location" }
+            }
+
+            # add location to end of list
+
+            $LocationList.Add($Location) | Out-Null
+        }
 
         $OldLocationCount += 1
     }
@@ -65,7 +75,7 @@ Set-Content -Path $LocHistFilePath -Value $LocationList -Encoding UTF8NoBOM
 
 # show statistics
 
-$DelLocationCount = $OldLocationCount - $NewLocationCount
+$DifLocationCount = $OldLocationCount - $NewLocationCount
 
-"{0} location{1} deleted, {2} location{3} remaining" -f $DelLocationCount, (Get-Plural $DelLocationCount),
+"{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
     $NewLocationCount, (Get-Plural $NewLocationCount)

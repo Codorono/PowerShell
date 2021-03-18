@@ -1,5 +1,9 @@
 ﻿#===================================================================================================
 
+Set-StrictMode -Version Latest
+
+#===================================================================================================
+
 function Beep([uint] $Freq = 750, [uint] $Duration = 250)
 {
     [void] [Win32.Kernel32]::Beep($Freq, $Duration)
@@ -10,7 +14,7 @@ function Beep([uint] $Freq = 750, [uint] $Duration = 250)
 function Out-Debug
 {
     [CmdletBinding()]
-    param ([Parameter(Mandatory=$true, ValueFromPipeline=$true)] $Item)
+    param([Parameter(Mandatory=$true, ValueFromPipeline=$true)] $Item)
 
     process
     {
@@ -396,8 +400,6 @@ function Get-MemoryInfo
 }
 
 #===================================================================================================
-
-Set-StrictMode -Version Latest
 
 enum STD_HANDLE
 {

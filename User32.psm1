@@ -1,6 +1,50 @@
 ﻿#===================================================================================================
 
-function MessageBeep([uint] $Type = [MB_TYPE]::MB_OK)
+Set-StrictMode -Version Latest
+
+#===================================================================================================
+
+function Get-ShellWindow()
+{
+    [Win32.User32]::GetShellWindow()
+}
+
+#===================================================================================================
+
+function Send-Message
+(
+    [System.IntPtr] $HWnd,
+    [uint] $Msg,
+    [System.IntPtr] $WParam,
+    [System.IntPtr] $LParam
+)
+{
+    [Win32.User32]::SendMessageW($HWnd, $Msg, $WParam, $LParam)
+}
+
+#===================================================================================================
+
+function Post-Message
+(
+    [System.IntPtr] $HWnd,
+    [uint] $Msg,
+    [System.IntPtr] $WParam,
+    [System.IntPtr] $LParam
+)
+{
+    [Win32.User32]::PostMessageW($HWnd, $Msg, $WParam, $LParam)
+}
+
+#===================================================================================================
+
+function Set-MonitorPowerOff
+{
+    [void] [Win32.User32]::PostMessageW($(Get-ShellWindow), 0x0112, 0xF170, 2)
+}
+
+#===================================================================================================
+
+function Message-Beep([uint] $Type = [MB_TYPE]::MB_OK)
 {
     [void] [Win32.User32]::MessageBeep($Type)
 }
@@ -124,8 +168,6 @@ function Show-MessageBox
 
 #===================================================================================================
 
-Set-StrictMode -Version Latest
-
 enum MB_TYPE
 {
     MB_OK = 0x00000000
@@ -172,6 +214,18 @@ enum MB_MISC
 
 $MemberDefinition =
 @"
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = false)]
+public static extern System.IntPtr GetShellWindow();
+
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg,
+    System.IntPtr wParam, System.IntPtr lParam);
+
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool PostMessageW(System.IntPtr hWnd, uint uMsg,
+    System.IntPtr wParam, System.IntPtr lParam);
+
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool MessageBeep(uint uType);

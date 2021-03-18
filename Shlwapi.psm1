@@ -1,5 +1,9 @@
 ﻿#===================================================================================================
 
+Set-StrictMode -Version Latest
+
+#===================================================================================================
+
 function Format-ByteSize([long] $Number, [switch] $Truncate)
 {
     $Flags = $Truncate ? [SFBS_FLAGS]::TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS : [SFBS_FLAGS]::ROUND_TO_NEAREST_DISPLAYED_DIGIT
@@ -12,8 +16,6 @@ function Format-ByteSize([long] $Number, [switch] $Truncate)
 }
 
 #===================================================================================================
-
-Set-StrictMode -Version Latest
 
 enum SFBS_FLAGS
 {

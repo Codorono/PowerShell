@@ -6,7 +6,7 @@
 
     $CurrentPath = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
 
-    if (($CurrentPath -ne $Home) -and ($CurrentPath.StartsWith($Home)))
+    if ($CurrentPath.StartsWith($Home, [System.StringComparison]::OrdinalIgnoreCase))
     {
         $CurrentPath = "~" + $CurrentPath.SubString($Home.Length)
     }

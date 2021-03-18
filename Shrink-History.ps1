@@ -45,7 +45,7 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 
                 $CommandList.RemoveAt($Index)
 
-                if ($Verbose) { "Deleted $Command" }
+                if ($Verbose) { "Removed $Command" }
             }
 
             # add command to end of list
@@ -78,7 +78,7 @@ Set-Content -Path $HistoryFilePath -Value $CommandList -Encoding UTF8NoBOM
 
 # show statistics
 
-$DelCommandCount = $OldCommandCount - $NewCommandCount
+$DifCommandCount = $OldCommandCount - $NewCommandCount
 
-"{0} command{1} deleted, {2} command{3} remaining" -f $DelCommandCount, (Get-Plural $DelCommandCount),
+"{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
     $NewCommandCount, (Get-Plural $NewCommandCount)
