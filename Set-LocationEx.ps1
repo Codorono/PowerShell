@@ -1,4 +1,10 @@
-﻿function Set-LocationEx
+﻿#===================================================================================================
+
+Set-StrictMode -Version Latest
+
+#===================================================================================================
+
+function Set-LocationEx
 {
     [CmdletBinding(DefaultParameterSetName="Path")]
     param
@@ -43,4 +49,8 @@
     Add-Content -Path $LocHistFilePath -Value $CurrentLocation -Encoding UTF8NoBOM
 }
 
+#===================================================================================================
+
 Set-Alias "cd" Set-LocationEx -Option AllScope
+
+#===================================================================================================

@@ -1,10 +1,16 @@
-﻿param
+﻿#===================================================================================================
+
+param
 (
     [int] $MaxLocationCount = -1,
     [switch] $Verbose
 )
 
+#===================================================================================================
+
 Set-StrictMode -Version Latest
+
+#===================================================================================================
 
 # list of locations
 
@@ -79,3 +85,5 @@ $DifLocationCount = $OldLocationCount - $NewLocationCount
 
 "{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
     $NewLocationCount, (Get-Plural $NewLocationCount)
+
+#===================================================================================================

@@ -1,10 +1,16 @@
-﻿param
+﻿#===================================================================================================
+
+param
 (
     [int] $MaxCommandCount = -1,
     [switch] $Verbose
 )
 
+#===================================================================================================
+
 Set-StrictMode -Version Latest
+
+#===================================================================================================
 
 # list of commands
 
@@ -82,3 +88,5 @@ $DifCommandCount = $OldCommandCount - $NewCommandCount
 
 "{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
     $NewCommandCount, (Get-Plural $NewCommandCount)
+
+#===================================================================================================
