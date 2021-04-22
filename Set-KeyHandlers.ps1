@@ -224,12 +224,3 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
 }
 
 #===================================================================================================
-
-#Set-PSReadLineKeyHandler -Chord Ctrl+Shift+S -ScriptBlock `
-#{
-#    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-#    [Microsoft.PowerShell.PSConsoleReadLine]::Insert("GIT status")
-#    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
-#}
-
-#===================================================================================================

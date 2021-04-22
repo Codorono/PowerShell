@@ -18,6 +18,8 @@ function Get-Plurale([int] $Number) { ($Number -eq 1) ? "" : "es" }
 
 function Get-OSVersion
 {
+    # Win7=0x0601, Win81=0x0603, Win10=0x0A00
+
     $OSVersion = [System.Environment]::OSVersion.Version
 
     ($OSVersion.Major -shl 8) -bor $OSVersion.Minor
@@ -128,9 +130,11 @@ function Search-Path([string] $File)
 
     foreach ($Path in ($Env:Path -split ";"))
     {
-        if (Test-Path (Join-Path $Path $File))
+        $FilePath = Join-Path $Path $File
+
+        if (Test-Path $FilePath)
         {
-            Get-ChildItem -Path (Join-Path $Path $File) -File | ForEach-Object { $_.FullName }
+            Get-ChildItem -Path $FilePath -File | ForEach-Object { $_.FullName }
         }
     }
 }

@@ -39,7 +39,7 @@ function Post-Message
 
 function Set-MonitorPowerOff
 {
-    [void] [Win32.User32]::PostMessageW($(Get-ShellWindow), 0x0112, 0xF170, 2)
+    [void] [Win32.User32]::PostMessageW((Get-ShellWindow), $WM_SYSCOMMAND, $SC_MONITORPOWER, 2)
 }
 
 #===================================================================================================
@@ -209,6 +209,9 @@ enum MB_MISC
     MB_DEFAULT_DESKTOP_ONLY = 0x00020000
     MB_TOPMOST = 0x00040000
 }
+
+Set-Variable -Name "WM_SYSCOMMAND" -Value 0x0112 -Option Constant
+Set-Variable -Name "SC_MONITORPOWER" -Value 0xF170 -Option Constant
 
 #===================================================================================================
 
