@@ -23,7 +23,7 @@ function prompt
 
     $PSVersion = $PSVersionTable.PSVersion
 
-    $Title = "{0}{1} ~ PowerShell {2}.{3} {4}" -f ((Test-Administrator) ? "Admin: " : ""), $CurrentPath,
+    $Title = "{0}{1} - PowerShell {2}.{3} {4}" -f ((Test-Administrator) ? "Admin: " : ""), $CurrentPath,
         $PSVersion.Major, $PSVersion.Minor, ((Test-64BitProcess) ? "(x64)" : "(x86)")
 
     $Host.UI.RawUI.WindowTitle = $Title
