@@ -52,10 +52,19 @@ function Test-VirtualPC
 
 function Test-Administrator
 {
-    $CurrentUser = New-Object "System.Security.Principal.WindowsPrincipal" `
-        -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())
+#   $CurrentUser = New-Object "System.Security.Principal.WindowsPrincipal" `
+#       -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())
 
-    $CurrentUser.IsInRole([System.Security.Principal.WindowsBuiltinRole]::Administrator)
+#   $CurrentUser.IsInRole([System.Security.Principal.WindowsBuiltinRole]::Administrator)
+
+    ([System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+#===================================================================================================
+
+function Test-Elevated
+{
+    (([System.Security.Principal.WindowsIdentity]::GetCurrent()).Groups -contains "S-1-5-32-544")
 }
 
 #===================================================================================================
@@ -160,6 +169,34 @@ function Test-SearchPath([string] $File)
     }
 
     $Result
+}
+
+#===================================================================================================
+
+function Out-Speak
+{
+    [CmdletBinding()]
+    param([Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromRemainingArguments=$true)] [string] $Text)
+
+    process
+    {
+        if ($Text.Length -ne 0)
+        {
+            if ($PSVersionTable.PSEdition -eq "Desktop")
+            {
+                [System.Reflection.Assembly]::LoadWithPartialName("System.Speech") | Out-Null
+
+                $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+
+                $SpeechSynthesizer.Speak($Text)
+            }
+
+            else
+            {
+                SPEAK $Text
+            }
+        }
+    }
 }
 
 #===================================================================================================

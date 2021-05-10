@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-function Beep([uint] $Freq = 750, [uint] $Duration = 250)
+function Out-Beep([uint] $Freq = 750, [uint] $Duration = 250)
 {
     [void] [Win32.Kernel32]::Beep($Freq, $Duration)
 }
@@ -14,11 +14,11 @@ function Beep([uint] $Freq = 750, [uint] $Duration = 250)
 function Out-Debug
 {
     [CmdletBinding()]
-    param([Parameter(Mandatory=$true, ValueFromPipeline=$true)] $Item)
+    param([Parameter(Mandatory=$true, ValueFromPipeline=$true)] [string] $Text)
 
     process
     {
-        [Win32.Kernel32]::OutputDebugStringW($Item)
+        [Win32.Kernel32]::OutputDebugStringW($Text)
     }
 }
 
@@ -376,6 +376,15 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 #===================================================================================================
 
+function Set-DosDevice([string] $Drive, [string] $Path, [switch] $Remove)
+{
+    $Flags = $Remove ? $DDD_REMOVE_DEFINITION : 0
+
+    [void] [Win32.Kernel32]::DefineDosDeviceW($Flags, $Drive, $Path)
+}
+
+#===================================================================================================
+
 function Get-MemoryInfo
 {
     # get process pseudo handle
@@ -431,6 +440,8 @@ enum PROCESS_MODE_BACKGROUND
 
 Set-Variable -Name "INVALID_HANDLE_VALUE" -Value ([System.IntPtr] -1) -Option Constant
 
+Set-Variable -Name "DDD_REMOVE_DEFINITION" -Value 0x00000002 -Option Constant
+
 #===================================================================================================
 
 $MemberDefinition =
@@ -483,7 +494,7 @@ public struct MEMORY_BASIC_INFORMATION
 public static extern bool Beep(uint uFreq, uint uDuration);
 
 [DllImport("kernel32.dll", ExactSpelling = true)]
-public static extern void OutputDebugStringW([MarshalAs(UnmanagedType.LPWStr)] String lpOutputString);
+public static extern void OutputDebugStringW([MarshalAs(UnmanagedType.LPWStr)] string lpOutputString);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern System.IntPtr GetStdHandle(int nStdHandle);
@@ -516,6 +527,11 @@ public static extern int GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutp
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
     ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int DefineDosDeviceW(uint uFlags, 
+    [MarshalAs(UnmanagedType.LPWStr)] string lpDeviceName,
+    [MarshalAs(UnmanagedType.LPWStr)] string lpTargetPath);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern System.IntPtr VirtualQueryEx(System.IntPtr hProcess, System.IntPtr lpAddress,

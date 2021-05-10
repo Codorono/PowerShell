@@ -16,37 +16,33 @@ function Send-Message
     [System.IntPtr] $HWnd,
     [uint] $Msg,
     [System.IntPtr] $WParam,
-    [System.IntPtr] $LParam
+    [System.IntPtr] $LParam,
+    [switch] $Post
 )
 {
-    [Win32.User32]::SendMessageW($HWnd, $Msg, $WParam, $LParam)
+    if ($Post)
+    {
+        [Win32.User32]::PostMessageW($HWnd, $Msg, $WParam, $LParam)
+    }
+
+    else
+    {
+        [Win32.User32]::SendMessageW($HWnd, $Msg, $WParam, $LParam)
+    }
 }
 
 #===================================================================================================
 
-function Post-Message
-(
-    [System.IntPtr] $HWnd,
-    [uint] $Msg,
-    [System.IntPtr] $WParam,
-    [System.IntPtr] $LParam
-)
-{
-    [Win32.User32]::PostMessageW($HWnd, $Msg, $WParam, $LParam)
-}
-
-#===================================================================================================
-
-function Set-MonitorPowerOff
+function Disable-MonitorPower
 {
     [void] [Win32.User32]::PostMessageW((Get-ShellWindow), $WM_SYSCOMMAND, $SC_MONITORPOWER, 2)
 }
 
 #===================================================================================================
 
-function Message-Beep([uint] $Type = [MB_TYPE]::MB_OK)
+function Out-MessageBeep([MB_BEEP] $Type = [MB_BEEP]::MB_DEFAULT)
 {
-    [void] [Win32.User32]::MessageBeep($Type)
+    [void] [Win32.User32]::MessageBeep([System.BitConverter]::ToUInt32([System.BitConverter]::GetBytes([int] $Type), 0))
 }
 
 #===================================================================================================
@@ -55,7 +51,7 @@ function Show-MessageBox
 (
     [Parameter(Mandatory = $true)] [string] $Text,
     [string] $Caption,
-    [uint] $Milliseconds = 0,
+    [uint] $Seconds = 0,
     [switch] $Ok,
     [switch] $OkCancel,
     [switch] $AbortRetryIgnore,
@@ -148,14 +144,14 @@ function Show-MessageBox
 
     $Result = 0
 
-    if ($Milliseconds -eq 0)
+    if ($Seconds -eq 0)
     {
         $Result = [Win32.User32]::MessageBoxW($Hwnd, $Text, $Caption, $Type)
     }
 
     else
     {
-        $Result = [Win32.User32]::MessageBoxTimeoutW($Hwnd, $Text, $Caption, $Type, 0, $Milliseconds)
+        $Result = [Win32.User32]::MessageBoxTimeoutW($Hwnd, $Text, $Caption, $Type, 0, $Seconds * 1000)
     }
 
     if ($Result -eq 0)
@@ -208,6 +204,16 @@ enum MB_MISC
     MB_SETFOREGROUND = 0x00010000
     MB_DEFAULT_DESKTOP_ONLY = 0x00020000
     MB_TOPMOST = 0x00040000
+}
+
+enum MB_BEEP
+{
+    MB_OK = 0x00000000
+    MB_STOP = 0x00000010
+    MB_QUESTION = 0x00000020
+    MB_EXCLAMATION = 0x00000030
+    MB_INFORMATION = 0x00000040
+    MB_DEFAULT = 0xFFFFFFFF
 }
 
 Set-Variable -Name "WM_SYSCOMMAND" -Value 0x0112 -Option Constant
