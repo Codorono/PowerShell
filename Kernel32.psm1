@@ -376,6 +376,73 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 #===================================================================================================
 
+function Get-DriveType([string] $DriveRoot)
+{
+    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+
+    [Win32.Kernel32]::GetDriveTypeW($DriveRoot)
+}
+
+#===================================================================================================
+
+function Get-VolumeInformation([string] $DriveRoot)
+{
+    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+
+    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+    $VolumeSerialNumber = [uint] 0
+    $MaximumComponentLength = [uint] 0
+    $FileSystemFlags = [uint] 0
+    $FileSystemName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+
+    [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
+        [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags, $FileSystemName, $FileSystemName.Capacity)
+
+    $VolumeName.ToString()
+    "{0:X}" -f $VolumeSerialNumber
+    $MaximumComponentLength
+    "{0:X}" -f $FileSystemFlags
+    $FileSystemName.ToString()
+}
+
+#===================================================================================================
+
+function Get-VolumeInformation([string] $DriveRoot)
+{
+    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+
+    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+    $VolumeSerialNumber = [uint] 0
+    $MaximumComponentLength = [uint] 0
+    $FileSystemFlags = [uint] 0
+    $FileSystemName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+
+    [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
+        [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags, $FileSystemName, $FileSystemName.Capacity)
+
+    $VolumeName.ToString()
+    "{0:X}" -f $VolumeSerialNumber
+    $MaximumComponentLength
+    "{0:X}" -f $FileSystemFlags
+    $FileSystemName.ToString()
+}
+
+#===================================================================================================
+
+function Get-VolumeName([string] $DriveRoot)
+{
+    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+
+    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+
+    [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
+        [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero, 0)
+
+    $VolumeName.ToString()
+}
+
+#===================================================================================================
+
 function Set-DosDevice([string] $Drive, [string] $Path, [switch] $Remove)
 {
     $Flags = $Remove ? $DDD_REMOVE_DEFINITION : 0
@@ -527,6 +594,23 @@ public static extern int GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutp
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
     ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
+
+[DllImport("kernel32.dll", ExactSpelling = true)]
+public static extern uint GetDriveTypeW([MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int GetVolumeInformationW( 
+    [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
+    [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
+    out uint lpVolumeSerialNumber, out uint lpMaximumComponentLength, out uint lpFileSystemFlags,
+    [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpFileSystemNameBuffer, uint nFileSystemNameSize);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int GetVolumeInformationW( 
+    [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
+    [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
+    System.IntPtr lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
+    System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int DefineDosDeviceW(uint uFlags, 

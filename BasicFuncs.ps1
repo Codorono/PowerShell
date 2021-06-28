@@ -22,7 +22,7 @@ function Get-OSVersion
 
     $OSVersion = [System.Environment]::OSVersion.Version
 
-    ($OSVersion.Major -shl 8) -bor $OSVersion.Minor
+    (($OSVersion.Major -shl 8) -bor $OSVersion.Minor)
 }
 
 #===================================================================================================
@@ -45,18 +45,13 @@ function Test-VirtualPC
 {
     $Baseboard = Get-CimInstance -Namespace "root\CIMV2" -ClassName "Win32_Baseboard"
 
-    ($Baseboard.Manufacturer -eq "Microsoft Corporation") -and ($Baseboard.Product -eq "Virtual Machine")
+    (($Baseboard.Manufacturer -eq "Microsoft Corporation") -and ($Baseboard.Product -eq "Virtual Machine"))
 }
 
 #===================================================================================================
 
 function Test-Administrator
 {
-#   $CurrentUser = New-Object "System.Security.Principal.WindowsPrincipal" `
-#       -ArgumentList ([System.Security.Principal.WindowsIdentity]::GetCurrent())
-
-#   $CurrentUser.IsInRole([System.Security.Principal.WindowsBuiltinRole]::Administrator)
-
     ([System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
