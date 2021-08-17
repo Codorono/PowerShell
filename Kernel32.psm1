@@ -216,7 +216,7 @@ function Set-ConsoleColorScheme([string] $Scheme)
     $Attributes = 0x0007
     $PopupAttributes = 0x00F5
 
-    if ($Scheme -eq "")
+    if ($Scheme.Length -eq 0)
     {
         # get colors from registry
 

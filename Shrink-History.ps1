@@ -29,11 +29,11 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 {
     # skip blank lines
 
-    if ($_ -ne "")
+    if ($_.Length -ne 0)
     {
         # deal with multi-line commands
 
-        if ($Command -ne "") { $Command += "`n" }
+        if ($Command.Length -ne 0) { $Command += "`n" }
 
         $Command += $_
 
