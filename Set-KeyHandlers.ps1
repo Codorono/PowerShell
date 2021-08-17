@@ -31,13 +31,13 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
         {
             # skip blank lines
 
-            if ($_ -ne "")
+            if ($_.Length -ne 0)
             {
                 $Location = $_
 
                 # make sure location is valid
 
-                if (($Match -eq "") -or ($Location -like "*$Match*"))
+                if (($Match.Length -eq 0) -or ($Location -like "*$Match*"))
                 {
                     # remove duplicate location from list
 
@@ -102,7 +102,7 @@ Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
 
         # make sure command is valid
 
-        if (($Match -eq "") -or ($Command -like "*$Match*"))
+        if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
         {
             # remove duplicate command from list
 
@@ -167,11 +167,11 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
         {
             # skip blank lines
 
-            if ($_ -ne "")
+            if ($_.Length -ne 0)
             {
                 # deal with multi-line commands
 
-                if ($Command -ne "") { $Command += "`n" }
+                if ($Command.Length -ne 0) { $Command += "`n" }
 
                 $Command += $_
 
@@ -181,7 +181,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
                 {
                     # make sure command is valid
 
-                    if (($Match -eq "") -or ($Command -like "*$Match*"))
+                    if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
                     {
                         # remove duplicate command from list
 

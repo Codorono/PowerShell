@@ -66,9 +66,9 @@ function Test-Elevated
 
 function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
 {
-    if ($String2 -ne "")
+    if ($String2.Length -ne 0)
     {
-        if ($String1 -ne "")
+        if ($String1.Length -ne 0)
         {
             if (-not (($String1.EndsWith($Separator)) -or ($String2.StartsWith($Separator))))
             {

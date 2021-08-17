@@ -29,7 +29,7 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
 {
     # skip blank lines
 
-    if ($_ -ne "")
+    if ($_.Length -ne 0)
     {
         $Location = $_
 

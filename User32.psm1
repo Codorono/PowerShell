@@ -82,11 +82,11 @@ function Show-MessageBox
 
     # get caption
 
-    if ($Caption -eq "")
+    if ($Caption.Length -eq 0)
     {
         $ScriptName = $MyInvocation.ScriptName
 
-        if ($ScriptName -ne "")
+        if ($ScriptName.Length -ne 0)
         {
             $Caption =[System.IO.Path]::GetFileNameWithoutExtension($ScriptName)
         }
