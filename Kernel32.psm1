@@ -46,6 +46,37 @@ function Test-StdOutputConsole
 
 #===================================================================================================
 
+function Enable-ConsoleVTProcessing
+{
+    # get standard output handle
+
+    $StdOutputHandle = [Win32.Kernel32]::GetStdHandle([STD_HANDLE]::OUTPUT)
+
+    if (($StdOutputHandle -ne [System.IntPtr]::Zero) -and ($StdOutputHandle -ne $INVALID_HANDLE_VALUE))
+    {
+        # determine if standard output is console buffer
+
+        $ConsoleMode = 0
+
+        if ([Win32.Kernel32]::GetConsoleMode($StdOutputHandle, [ref] $ConsoleMode) -ne 0)
+        {
+            if (($ConsoleMode -band [CONSOLE_OUTPUT_MODE]::ENABLE_VIRTUAL_TERMINAL_PROCESSING) -eq 0)
+            {
+                $ConsoleMode = $ConsoleMode -bor [CONSOLE_OUTPUT_MODE]::ENABLE_VIRTUAL_TERMINAL_PROCESSING
+
+                if ([Win32.Kernel32]::SetConsoleMode($StdOutputHandle, $ConsoleMode) -eq 0)
+                {
+                    throw ( New-Object "System.ComponentModel.Win32Exception" )
+                }
+
+                $ConsoleMode
+            }
+        }
+    }
+}
+
+#===================================================================================================
+
 function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 {
     # get process pseudo handle
@@ -479,7 +510,9 @@ function Get-MemoryInfo
 
 enum STD_HANDLE
 {
+    INPUT = -10
     OUTPUT = -11
+    ERROR = -12
 }
 
 enum FILE_TYPE
@@ -503,6 +536,11 @@ enum PROCESS_MODE_BACKGROUND
 {
     BEGIN = 0x00100000
     END = 0x00200000
+}
+
+enum CONSOLE_OUTPUT_MODE
+{
+    ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x00000004
 }
 
 Set-Variable -Name "INVALID_HANDLE_VALUE" -Value ([System.IntPtr] -1) -Option Constant
@@ -599,21 +637,21 @@ public static extern int SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutp
 public static extern uint GetDriveTypeW([MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetVolumeInformationW( 
+public static extern int GetVolumeInformationW(
     [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
     [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
     out uint lpVolumeSerialNumber, out uint lpMaximumComponentLength, out uint lpFileSystemFlags,
     [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetVolumeInformationW( 
+public static extern int GetVolumeInformationW(
     [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
     [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
     System.IntPtr lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
     System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int DefineDosDeviceW(uint uFlags, 
+public static extern int DefineDosDeviceW(uint uFlags,
     [MarshalAs(UnmanagedType.LPWStr)] string lpDeviceName,
     [MarshalAs(UnmanagedType.LPWStr)] string lpTargetPath);
 
