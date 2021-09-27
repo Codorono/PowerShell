@@ -12,35 +12,9 @@ function Get-KnownFolderPath
         [switch] $NoVerify
     )
 
-    # enhance x64 folders
+    # enhance x64 folders in 32-bit process
 
-    if (($FolderName -eq "ProgramFilesX64") -and (-not (Test-64BitProcess)))
-    {
-        if (Test-64BitSystem)
-        {
-            return $Env:ProgramW6432
-        }
-
-        else
-        {
-            $FolderName = "ProgramFiles"
-        }
-    }
-
-    elseif (($FolderName -eq "ProgramFilesCommonX64") -and (-not (Test-64BitProcess)))
-    {
-        if (Test-64BitSystem)
-        {
-            return $Env:CommonProgramW6432
-        }
-
-        else
-        {
-            $FolderName = "ProgramFilesCommon"
-        }
-    }
-
-    elseif ($FolderName -eq "SystemX64")
+    if ($FolderName -eq "SystemX64")
     {
         if ((Test-64BitSystem) -and (-not (Test-64BitProcess)))
         {
@@ -50,6 +24,35 @@ function Get-KnownFolderPath
         else
         {
             $FolderName = "System"
+        }
+    }
+
+    elseif (-not (Test-64BitProcess))
+    {
+        if ($FolderName -eq "ProgramFilesX64")
+        {
+            if (Test-64BitSystem)
+            {
+                return $Env:ProgramW6432
+            }
+
+            else
+            {
+                $FolderName = "ProgramFiles"
+            }
+        }
+
+        elseif ($FolderName -eq "ProgramFilesCommonX64")
+        {
+            if (Test-64BitSystem)
+            {
+                return $Env:CommonProgramW6432
+            }
+
+            else
+            {
+                $FolderName = "ProgramFilesCommon"
+            }
         }
     }
 
