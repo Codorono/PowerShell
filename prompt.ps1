@@ -6,7 +6,7 @@ Set-StrictMode -Version Latest
 
 function prompt
 {
-    # set prompt
+    # get current path
 
     $PathInfo = $ExecutionContext.SessionState.Path.CurrentLocation
 
@@ -17,16 +17,29 @@ function prompt
         $CurrentPath = "~" + $CurrentPath.SubString($Home.Length)
     }
 
-    "{0}{1} " -f $CurrentPath, ('>' * ($NestedPromptLevel + 1))
-
     # set title
 
     $PSVersion = $PSVersionTable.PSVersion
 
-    $Title = "{0}{1} - PowerShell {2}.{3} {4}" -f ((Test-Administrator) ? "Admin: " : ""), $CurrentPath,
-        $PSVersion.Major, $PSVersion.Minor, ((Test-64BitProcess) ? "(x64)" : "(x86)")
+    $WindowTitle = "{0} -- PowerShell {1}.{2} ({3})" -f $CurrentPath, $PSVersion.Major,
+        $PSVersion.Minor, ((Test-64BitProcess) ? "x64" : "x86")
 
-    $Host.UI.RawUI.WindowTitle = $Title
+    if (Test-Path Variable:Title)
+    {
+        $WindowTitle = $WindowTitle + " -- " + $Title
+    }
+
+    if (Test-Administrator)
+    {
+        $WindowTitle = $WindowTitle + " -- Administrator"
+    }
+
+    $Host.UI.RawUI.WindowTitle = $WindowTitle
+
+    # set prompt
+
+    "{0}{1} " -f $CurrentPath, ('>' * ($NestedPromptLevel + 1))
+
 }
 
 #===================================================================================================
