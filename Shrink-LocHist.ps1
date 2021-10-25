@@ -37,7 +37,10 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
 
         if (-not (Test-Path $Location))
         {
-            if ($Verbose) { "Deleted $Location" }
+            if ($Verbose)
+            {
+                "Deleted $Location"
+            }
         }
 
         else
@@ -52,7 +55,10 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
 
                 $LocationList.RemoveAt($Index)
 
-                if ($Verbose) { "Removed $Location" }
+                if ($Verbose)
+                {
+                    "Removed $Location"
+                }
             }
 
             # add location to end of list

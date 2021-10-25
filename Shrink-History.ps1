@@ -33,7 +33,10 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
     {
         # deal with multi-line commands
 
-        if ($Command.Length -ne 0) { $Command += "`n" }
+        if ($Command.Length -ne 0)
+        {
+            $Command += "`n"
+        }
 
         $Command += $_
 
@@ -51,7 +54,10 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 
                 $CommandList.RemoveAt($Index)
 
-                if ($Verbose) { "Removed $Command" }
+                if ($Verbose)
+                {
+                    "Removed $Command"
+                }
             }
 
             # add command to end of list
