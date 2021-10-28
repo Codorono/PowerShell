@@ -237,6 +237,7 @@ $FolderIds =
     "AppDataDocuments" = [System.Guid] "7BE16610-1F7F-44AC-BFF0-83E15F2FFCA1"
     "AppDataFavorites" = [System.Guid] "7CFBEFBC-DE1F-45AA-B843-A542AC536CC9"
     "AppDataProgramData" = [System.Guid] "559D40A3-A036-40FA-AF61-84CB430A4D34"
+    "LocalStorage" = [System.Guid] "B3EB08D3-A1F3-496B-865A-42B536CDA0EC"
     "DpapiKeys" = [System.Guid] "10C07CD0-EF91-4567-B850-448B77CB37F9"
     "CryptoKeys" = [System.Guid] "B88F4DAA-E7BD-49A9-B74D-02885A5DC765"
     "CredentialManager" = [System.Guid] "915221FB-9EFE-4BDA-8FD7-F78DCA774F87"
