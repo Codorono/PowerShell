@@ -177,19 +177,11 @@ function Out-Speak
     {
         if ($Text.Length -ne 0)
         {
-            if ($PSVersionTable.PSEdition -eq "Desktop")
-            {
-                [System.Reflection.Assembly]::LoadWithPartialName("System.Speech") | Out-Null
+            [System.Reflection.Assembly]::LoadWithPartialName("System.Speech") | Out-Null
 
-                $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+            $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
 
-                $SpeechSynthesizer.Speak($Text)
-            }
-
-            else
-            {
-                SPEAK $Text
-            }
+            $SpeechSynthesizer.Speak($Text)
         }
     }
 }
