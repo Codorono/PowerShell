@@ -4,21 +4,37 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-function ql { $args }
-
-function qs { "$args" }
+function ql
+{
+    $args
+}
 
 #===================================================================================================
 
-function Get-Plural([int] $Number) { ($Number -eq 1) ? "" : "s" }
+function qs
+{
+    "$args"
+}
 
-function Get-Plurale([int] $Number) { ($Number -eq 1) ? "" : "es" }
+#===================================================================================================
+
+function Get-Plural([int] $Number)
+{
+    ($Number -eq 1) ? "" : "s"
+}
+
+#===================================================================================================
+
+function Get-Plurale([int] $Number)
+{
+    ($Number -eq 1) ? "" : "es"
+}
 
 #===================================================================================================
 
 function Get-OSVersion
 {
-    # Win7=0x0601, Win81=0x0603, Win10=0x0A00
+    # Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00
 
     $OSVersion = [System.Environment]::OSVersion.Version
 
