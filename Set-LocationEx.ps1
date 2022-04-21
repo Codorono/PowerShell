@@ -21,6 +21,8 @@ function Set-LocationEx
         [switch] $PassThru
     )
 
+    # set location
+
     if ($PSCmdlet.ParameterSetName -eq "LiteralPath")
     {
         Set-Location -LiteralPath $LiteralPath -PassThru: $PassThru
@@ -36,7 +38,10 @@ function Set-LocationEx
     $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
     $LocHistFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
-    if (-not (Test-Path $LocHistFilePath)) { New-Item -Path $LocHistFilePath | Out-Null }
+    if (-not (Test-Path $LocHistFilePath))
+    {
+        New-Item -Path $LocHistFilePath | Out-Null
+    }
 
     # get current location
 

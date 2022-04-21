@@ -3,6 +3,7 @@
 param
 (
     [int] $MaxCommandCount = -1,
+    [switch] $IgnoreCase,
     [switch] $Verbose
 )
 
@@ -14,7 +15,7 @@ Set-StrictMode -Version Latest
 
 # list of commands
 
-$CommandList = New-Object "System.Collections.ArrayList"
+$CommandList = New-Object "System.Collections.Generic.List[string]"
 
 # get history file path
 
@@ -44,25 +45,54 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 
         if (-not $Command.EndsWith('`'))
         {
-            # look for command in list
-
-            $Index = $CommandList.IndexOf($Command)
-
-            if ($Index -ne -1)
+            if ($IgnoreCase)
             {
-                # remove previous command from list
+                # look for command in list
 
-                $CommandList.RemoveAt($Index)
-
-                if ($Verbose)
+                if ([System.Linq.Enumerable]::Contains($CommandList, $Command, [System.StringComparer]::OrdinalIgnoreCase))
                 {
-                    "Removed $Command"
+                    $Predicate = { param($Item) ([System.String]::Compare($Item, $Command, $true) -eq 0) }
+
+                    $Index = $CommandList.FindIndex($Predicate)
+
+                    if ($Index -ne -1)
+                    {
+                        # remove previous command from list
+
+                        $Remove = $CommandList[$Index]
+
+                        $CommandList.RemoveAt($Index)
+
+                        if ($Verbose)
+                        {
+                            "Removed $Remove"
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                # look for command in list
+
+                $Index = $CommandList.IndexOf($Command)
+
+                if ($Index -ne -1)
+                {
+                    # remove previous command from list
+
+                    $CommandList.RemoveAt($Index)
+
+                    if ($Verbose)
+                    {
+                        "Removed $Command"
+                    }
                 }
             }
 
             # add command to end of list
 
-            $CommandList.Add($Command) | Out-Null
+            $CommandList.Add($Command)
 
             $OldCommandCount += 1
 
@@ -92,7 +122,7 @@ Set-Content -Path $HistoryFilePath -Value $CommandList -Encoding UTF8NoBOM
 
 $DifCommandCount = $OldCommandCount - $NewCommandCount
 
-"{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
-    $NewCommandCount, (Get-Plural $NewCommandCount)
+"{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount,
+    (Get-Plural $DifCommandCount), $NewCommandCount, (Get-Plural $NewCommandCount)
 
 #===================================================================================================

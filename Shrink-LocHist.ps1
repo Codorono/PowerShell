@@ -14,7 +14,7 @@ Set-StrictMode -Version Latest
 
 # list of locations
 
-$LocationList = New-Object "System.Collections.ArrayList"
+$LocationList = New-Object "System.Collections.Generic.List[string]"
 
 # get location history file path
 
@@ -63,7 +63,7 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
 
             # add location to end of list
 
-            $LocationList.Add($Location) | Out-Null
+            $LocationList.Add($Location)
         }
 
         $OldLocationCount += 1
@@ -89,7 +89,7 @@ Set-Content -Path $LocHistFilePath -Value $LocationList -Encoding UTF8NoBOM
 
 $DifLocationCount = $OldLocationCount - $NewLocationCount
 
-"{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
-    $NewLocationCount, (Get-Plural $NewLocationCount)
+"{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount,
+    (Get-Plural $DifLocationCount), $NewLocationCount, (Get-Plural $NewLocationCount)
 
 #===================================================================================================

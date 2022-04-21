@@ -23,7 +23,7 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
     {
         # list of locations
 
-        $LocationList = New-Object "System.Collections.ArrayList"
+        $LocationList = New-Object "System.Collections.Generic.List[string]"
 
         # iterate through lines of location history file
 
@@ -41,11 +41,16 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
                 {
                     # remove duplicate location from list
 
-                    $LocationList.Remove($Location)
+                    $Index = $LocationList.IndexOf($Location)
+
+                    if ($Index -ne -1)
+                    {
+                        $LocationList.RemoveAt($Index)
+                    }
 
                     # add location to end of list
 
-                    $LocationList.Add($Location) | Out-Null
+                    $LocationList.Add($Location)
                 }
             }
         }
@@ -90,7 +95,7 @@ Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
 
     # list of commands
 
-    $CommandList = New-Object "System.Collections.ArrayList"
+    $CommandList = New-Object "System.Collections.Generic.List[string]"
 
     # iterate through history items
 
@@ -106,11 +111,16 @@ Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
         {
             # remove duplicate command from list
 
-            $CommandList.Remove($Command)
+            $Index = $CommandList.IndexOf($Command)
+
+            if ($Index -ne -1)
+            {
+                $CommandList.RemoveAt($Index)
+            }
 
             # add command to end of list
 
-            $CommandList.Add($Command) | Out-Null
+            $CommandList.Add($Command)
         }
     }
 
@@ -157,7 +167,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
     {
         # list of commands
 
-        $CommandList = New-Object "System.Collections.ArrayList"
+        $CommandList = New-Object "System.Collections.Generic.List[string]"
 
         # iterate through lines of history file
 
@@ -185,11 +195,16 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
                     {
                         # remove duplicate command from list
 
-                        $CommandList.Remove($Command)
+                        $Index = $CommandList.IndexOf($Command)
+
+                        if ($Index -ne -1)
+                        {
+                            $CommandList.RemoveAt($Index)
+                        }
 
                         # add command to end of list
 
-                        $CommandList.Add($Command) | Out-Null
+                        $CommandList.Add($Command)
                     }
 
                     # start new command
