@@ -126,7 +126,7 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 
 function Get-ConsoleWindow
 {
-    [Win32.Kernel32]::GetConsoleWindow();
+    [Win32.Kernel32]::GetConsoleWindow()
 }
 
 #===================================================================================================
