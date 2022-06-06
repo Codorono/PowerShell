@@ -68,7 +68,7 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
 
             # display location history in gridview
 
-            $Location = $LocationList | Out-GridView -Title "Locations" -Outputmode Single
+            $Location = $LocationList | Out-GridView -Title "Locations" -OutputMode Single
 
             if ($Location -ne $null)
             {
@@ -137,7 +137,7 @@ Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
 
         # display command history in gridview
 
-        $Command = $CommandList | Out-GridView -Title "Commands" -Outputmode Single
+        $Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
 
         if ($Command -ne $null)
         {
@@ -227,7 +227,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
 
             # display command history in gridview
 
-            $Command = $CommandList | Out-GridView -Title "Commands" -Outputmode Single
+            $Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
 
             if ($Command -ne $null)
             {
