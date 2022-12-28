@@ -72,7 +72,7 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
 
             if ($Location -ne $null)
             {
-                Set-LocationEx -Path $Location
+                Set-LocationEx -LiteralPath $Location
 
                 [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
                 [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
