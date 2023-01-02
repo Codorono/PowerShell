@@ -200,7 +200,7 @@ function Out-Speak
     {
         if ($Text.Length -ne 0)
         {
-            [System.Reflection.Assembly]::LoadWithPartialName("System.Speech") | Out-Null
+            [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Speech")
 
             $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
 

@@ -66,7 +66,7 @@ function Enable-ConsoleVTProcessing
 
                 if ([Win32.Kernel32]::SetConsoleMode($StdOutputHandle, $ConsoleMode) -eq 0)
                 {
-                    throw ( New-Object "System.ComponentModel.Win32Exception" )
+                    throw (New-Object "System.ComponentModel.Win32Exception")
                 }
 
                 $ConsoleMode
@@ -93,7 +93,7 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
     {
         if ([Win32.Kernel32]::SetPriorityClass($ProcessHandle, $BackgroundMode) -eq 0)
         {
-            throw ( New-Object "System.ComponentModel.Win32Exception" )
+            throw (New-Object "System.ComponentModel.Win32Exception")
         }
     }
 
@@ -103,7 +103,7 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 
     if ($PriorityClass -eq 0)
     {
-        throw ( New-Object "System.ComponentModel.Win32Exception" )
+        throw (New-Object "System.ComponentModel.Win32Exception")
     }
 
     # display priority class name
@@ -418,29 +418,10 @@ function Get-DriveType([string] $DriveRoot)
 
 function Get-VolumeInformation([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
-
-    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
-    $VolumeSerialNumber = [uint] 0
-    $MaximumComponentLength = [uint] 0
-    $FileSystemFlags = [uint] 0
-    $FileSystemName = New-Object "System.Text.StringBuilder" -ArgumentList 256
-
-    [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
-        [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags, $FileSystemName, $FileSystemName.Capacity)
-
-    $VolumeName.ToString()
-    "{0:X}" -f $VolumeSerialNumber
-    $MaximumComponentLength
-    "{0:X}" -f $FileSystemFlags
-    $FileSystemName.ToString()
-}
-
-#===================================================================================================
-
-function Get-VolumeInformation([string] $DriveRoot)
-{
-    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+    if (-not $DriveRoot.EndsWith('\'))
+    {
+        $DriveRoot += '\'
+    }
 
     $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
     $VolumeSerialNumber = [uint] 0
@@ -449,12 +430,13 @@ function Get-VolumeInformation([string] $DriveRoot)
     $FileSystemName = New-Object "System.Text.StringBuilder" -ArgumentList 256
 
     [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
-        [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags, $FileSystemName, $FileSystemName.Capacity)
+        [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags,
+        $FileSystemName, $FileSystemName.Capacity)
 
     $VolumeName.ToString()
-    "{0:X}" -f $VolumeSerialNumber
+    "{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF)
     $MaximumComponentLength
-    "{0:X}" -f $FileSystemFlags
+    "{0:X8}" -f $FileSystemFlags
     $FileSystemName.ToString()
 }
 
@@ -462,14 +444,36 @@ function Get-VolumeInformation([string] $DriveRoot)
 
 function Get-VolumeName([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+    if (-not $DriveRoot.EndsWith('\'))
+    {
+        $DriveRoot += '\'
+    }
 
     $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
 
     [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
-        [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero, 0)
+        [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero,
+        [System.IntPtr]::Zero, 0)
 
     $VolumeName.ToString()
+}
+
+#===================================================================================================
+
+function Get-VolumeSerialNumber([string] $DriveRoot)
+{
+    if (-not $DriveRoot.EndsWith('\'))
+    {
+        $DriveRoot += '\'
+    }
+
+    $VolumeSerialNumber = [uint] 0
+
+    [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, [System.IntPtr]::Zero, 0,
+        [ref] $VolumeSerialNumber, [System.IntPtr]::Zero, [System.IntPtr]::Zero,
+        [System.IntPtr]::Zero, 0)
+
+    "{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF)
 }
 
 #===================================================================================================
@@ -500,7 +504,7 @@ function Get-MemoryInfo
 
     if ($Result -eq 0)
     {
-        throw ( New-Object "System.ComponentModel.Win32Exception" )
+        throw (New-Object "System.ComponentModel.Win32Exception")
     }
 
     $MemoryBasicInformation
@@ -648,6 +652,13 @@ public static extern int GetVolumeInformationW(
     [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
     [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
     System.IntPtr lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
+    System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int GetVolumeInformationW(
+    [MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
+    System.IntPtr lpVolumeNameBuffer, uint nVolumeNameSize,
+    out uint lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
     System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
