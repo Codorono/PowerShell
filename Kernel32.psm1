@@ -436,7 +436,7 @@ function Get-VolumeInformation([string] $DriveRoot)
     $VolumeName.ToString()
     "{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF)
     $MaximumComponentLength
-    "{0:X8}" -f $FileSystemFlags
+    "0x{0:X8}" -f $FileSystemFlags
     $FileSystemName.ToString()
 }
 
