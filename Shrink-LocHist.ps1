@@ -39,7 +39,7 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
         {
             if ($Verbose)
             {
-                "Deleted $Location"
+                Write-Host "Deleted $Location" -ForegroundColor Red
             }
         }
 
@@ -57,7 +57,7 @@ Get-Content -Path $LocHistFilePath | ForEach-Object `
 
                 if ($Verbose)
                 {
-                    "Removed $Location"
+                    Write-Host "Removed $Location" -ForegroundColor Yellow
                 }
             }
 
@@ -89,7 +89,7 @@ Set-Content -Path $LocHistFilePath -Value $LocationList -Encoding UTF8NoBOM
 
 $DifLocationCount = $OldLocationCount - $NewLocationCount
 
-"{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount,
-    (Get-Plural $DifLocationCount), $NewLocationCount, (Get-Plural $NewLocationCount)
+Write-Host ("{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
+    $NewLocationCount, (Get-Plural $NewLocationCount)) -ForegroundColor Cyan
 
 #===================================================================================================

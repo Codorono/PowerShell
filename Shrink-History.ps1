@@ -65,7 +65,7 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 
                         if ($Verbose)
                         {
-                            "Removed $Remove"
+                            Write-Host "Removed $Remove" -ForegroundColor Yellow
                         }
                     }
                 }
@@ -85,7 +85,7 @@ Get-Content -Path $HistoryFilePath | ForEach-Object `
 
                     if ($Verbose)
                     {
-                        "Removed $Command"
+                        Write-Host "Removed $Command" -ForegroundColor Yellow
                     }
                 }
             }
@@ -122,7 +122,7 @@ Set-Content -Path $HistoryFilePath -Value $CommandList -Encoding UTF8NoBOM
 
 $DifCommandCount = $OldCommandCount - $NewCommandCount
 
-"{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount,
-    (Get-Plural $DifCommandCount), $NewCommandCount, (Get-Plural $NewCommandCount)
+Write-Host ("{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
+    $NewCommandCount, (Get-Plural $NewCommandCount)) -ForegroundColor Cyan
 
 #===================================================================================================
