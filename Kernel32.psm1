@@ -68,58 +68,11 @@ function Enable-ConsoleVTProcessing
                 {
                     throw (New-Object "System.ComponentModel.Win32Exception")
                 }
-
-                $ConsoleMode
             }
+
+            Write-Output ("Console mode: 0x{0:X8}" -f $ConsoleMode)
         }
     }
-}
-
-#===================================================================================================
-
-function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
-{
-    # get process pseudo handle
-
-    $ProcessHandle = [Win32.Kernel32]::GetCurrentProcess()
-
-    # get requested mode
-
-    $BackgroundMode = $Begin ? [PROCESS_MODE_BACKGROUND]::BEGIN : $End ? [PROCESS_MODE_BACKGROUND]::END : 0
-
-    # set background mode
-
-    if ($BackgroundMode -ne 0)
-    {
-        if ([Win32.Kernel32]::SetPriorityClass($ProcessHandle, $BackgroundMode) -eq 0)
-        {
-            throw (New-Object "System.ComponentModel.Win32Exception")
-        }
-    }
-
-    # get priority class
-
-    $PriorityClass = [Win32.Kernel32]::GetPriorityClass($ProcessHandle)
-
-    if ($PriorityClass -eq 0)
-    {
-        throw (New-Object "System.ComponentModel.Win32Exception")
-    }
-
-    # display priority class name
-
-    $PriorityClassName = switch ($PriorityClass)
-    {
-        ([uint] [PRIORITY_CLASS]::NORMAL) { "Normal" }
-        ([uint] [PRIORITY_CLASS]::IDLE) { "Idle" }
-        ([uint] [PRIORITY_CLASS]::HIGH) { "High" }
-        ([uint] [PRIORITY_CLASS]::REALTIME) { "Realtime" }
-        ([uint] [PRIORITY_CLASS]::BELOW_NORMAL) { "Below Normal" }
-        ([uint] [PRIORITY_CLASS]::ABOVE_NORMAL) { "Above Normal" }
-        default { "Unknown" }
-    }
-
-    "{0} priority class" -f $PriorityClassName
 }
 
 #===================================================================================================
@@ -409,18 +362,77 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 function Get-DriveType([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\')) { $DriveRoot += '\' }
+    if (-not $DriveRoot.EndsWith("\"))
+    {
+        $DriveRoot += "\"
+    }
 
     [Win32.Kernel32]::GetDriveTypeW($DriveRoot)
 }
 
 #===================================================================================================
 
+function Set-DosDevice([string] $Drive, [string] $Path, [switch] $Remove)
+{
+    $Flags = $Remove ? $DDD_REMOVE_DEFINITION : 0
+
+    [void] [Win32.Kernel32]::DefineDosDeviceW($Flags, $Drive, $Path)
+}
+
+#===================================================================================================
+
+function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
+{
+    # get process pseudo handle
+
+    $ProcessHandle = [Win32.Kernel32]::GetCurrentProcess()
+
+    # get requested mode
+
+    $BackgroundMode = $Begin ? [PROCESS_MODE_BACKGROUND]::BEGIN : $End ? [PROCESS_MODE_BACKGROUND]::END : 0
+
+    # set background mode
+
+    if ($BackgroundMode -ne 0)
+    {
+        if ([Win32.Kernel32]::SetPriorityClass($ProcessHandle, $BackgroundMode) -eq 0)
+        {
+            throw (New-Object "System.ComponentModel.Win32Exception")
+        }
+    }
+
+    # get priority class
+
+    $PriorityClass = [Win32.Kernel32]::GetPriorityClass($ProcessHandle)
+
+    if ($PriorityClass -eq 0)
+    {
+        throw (New-Object "System.ComponentModel.Win32Exception")
+    }
+
+    # display priority class name
+
+    $PriorityClassName = switch ($PriorityClass)
+    {
+        ([uint] [PRIORITY_CLASS]::NORMAL) { "Normal" }
+        ([uint] [PRIORITY_CLASS]::IDLE) { "Idle" }
+        ([uint] [PRIORITY_CLASS]::HIGH) { "High" }
+        ([uint] [PRIORITY_CLASS]::REALTIME) { "Realtime" }
+        ([uint] [PRIORITY_CLASS]::BELOW_NORMAL) { "Below Normal" }
+        ([uint] [PRIORITY_CLASS]::ABOVE_NORMAL) { "Above Normal" }
+        default { "Unknown" }
+    }
+
+    Write-Output ("{0} priority class" -f $PriorityClassName)
+}
+
+#===================================================================================================
+
 function Get-VolumeInformation([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\'))
+    if (-not $DriveRoot.EndsWith("\"))
     {
-        $DriveRoot += '\'
+        $DriveRoot += "\"
     }
 
     $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
@@ -433,20 +445,20 @@ function Get-VolumeInformation([string] $DriveRoot)
         [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags,
         $FileSystemName, $FileSystemName.Capacity)
 
-    $VolumeName.ToString()
-    "{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF)
-    $MaximumComponentLength
-    "0x{0:X8}" -f $FileSystemFlags
-    $FileSystemName.ToString()
+    Write-Output ($VolumeName.ToString())
+    Write-Output ("{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF))
+    Write-Output ($MaximumComponentLength)
+    Write-Output ("0x{0:X8}" -f $FileSystemFlags)
+    Write-Output ($FileSystemName.ToString())
 }
 
 #===================================================================================================
 
 function Get-VolumeName([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\'))
+    if (-not $DriveRoot.EndsWith("\"))
     {
-        $DriveRoot += '\'
+        $DriveRoot += "\"
     }
 
     $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
@@ -455,16 +467,16 @@ function Get-VolumeName([string] $DriveRoot)
         [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero,
         [System.IntPtr]::Zero, 0)
 
-    $VolumeName.ToString()
+    Write-Output ($VolumeName.ToString())
 }
 
 #===================================================================================================
 
 function Get-VolumeSerialNumber([string] $DriveRoot)
 {
-    if (-not $DriveRoot.EndsWith('\'))
+    if (-not $DriveRoot.EndsWith("\"))
     {
-        $DriveRoot += '\'
+        $DriveRoot += "\"
     }
 
     $VolumeSerialNumber = [uint] 0
@@ -473,16 +485,7 @@ function Get-VolumeSerialNumber([string] $DriveRoot)
         [ref] $VolumeSerialNumber, [System.IntPtr]::Zero, [System.IntPtr]::Zero,
         [System.IntPtr]::Zero, 0)
 
-    "{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF)
-}
-
-#===================================================================================================
-
-function Set-DosDevice([string] $Drive, [string] $Path, [switch] $Remove)
-{
-    $Flags = $Remove ? $DDD_REMOVE_DEFINITION : 0
-
-    [void] [Win32.Kernel32]::DefineDosDeviceW($Flags, $Drive, $Path)
+    Write-Output ("{0:X4}-{1:X4}" -f ($VolumeSerialNumber -shr 16), ($VolumeSerialNumber -band 0xFFFF))
 }
 
 #===================================================================================================
@@ -507,7 +510,7 @@ function Get-MemoryInfo
         throw (New-Object "System.ComponentModel.Win32Exception")
     }
 
-    $MemoryBasicInformation
+    Write-Output $MemoryBasicInformation
 }
 
 #===================================================================================================
@@ -608,18 +611,6 @@ public static extern void OutputDebugStringW([MarshalAs(UnmanagedType.LPWStr)] s
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern System.IntPtr GetStdHandle(int nStdHandle);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern uint GetFileType(System.IntPtr hFile);
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = false)]
-public static extern System.IntPtr GetCurrentProcess();
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern uint GetPriorityClass(System.IntPtr hProcess);
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int SetPriorityClass(System.IntPtr hProcess, uint uPriorityClass);
-
 [DllImport("kernel32.dll", ExactSpelling = true)]
 public static extern System.IntPtr GetConsoleWindow();
 
@@ -637,8 +628,25 @@ public static extern int GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutp
 public static extern int SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
     ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
 
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern uint GetFileType(System.IntPtr hFile);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = false)]
+public static extern System.IntPtr GetCurrentProcess();
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern uint GetPriorityClass(System.IntPtr hProcess);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int SetPriorityClass(System.IntPtr hProcess, uint uPriorityClass);
+
 [DllImport("kernel32.dll", ExactSpelling = true)]
 public static extern uint GetDriveTypeW([MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int DefineDosDeviceW(uint uFlags,
+    [MarshalAs(UnmanagedType.LPWStr)] string lpDeviceName,
+    [MarshalAs(UnmanagedType.LPWStr)] string lpTargetPath);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int GetVolumeInformationW(
@@ -660,11 +668,6 @@ public static extern int GetVolumeInformationW(
     System.IntPtr lpVolumeNameBuffer, uint nVolumeNameSize,
     out uint lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
     System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int DefineDosDeviceW(uint uFlags,
-    [MarshalAs(UnmanagedType.LPWStr)] string lpDeviceName,
-    [MarshalAs(UnmanagedType.LPWStr)] string lpTargetPath);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern System.IntPtr VirtualQueryEx(System.IntPtr hProcess, System.IntPtr lpAddress,
