@@ -84,6 +84,42 @@ function Get-ConsoleWindow
 
 #===================================================================================================
 
+function Get-ConsoleAttributes
+{
+    $Attributes = [ushort] 0
+
+    # get standard output handle
+
+    $StdOutputHandle = [Win32.Kernel32]::GetStdHandle([STD_HANDLE]::OUTPUT)
+
+    if (($StdOutputHandle -ne [System.IntPtr]::Zero) -and ($StdOutputHandle -ne $INVALID_HANDLE_VALUE))
+    {
+        # make sure standard output is console buffer
+
+        $NotUsed = 0
+
+        if ([Win32.Kernel32]::GetConsoleMode($StdOutputHandle, [ref] $NotUsed) -ne 0)
+        {
+            # create console screen buffer info structure
+
+            $ConsoleScreenBufferInfo = New-Object "Win32.Kernel32+CONSOLE_SCREEN_BUFFER_INFO"
+
+            # get console screen buffer info
+
+            if ([Win32.Kernel32]::GetConsoleScreenBufferInfo($StdOutputHandle, [ref] $ConsoleScreenBufferInfo) -eq 0)
+            {
+                throw (New-Object "System.ComponentModel.Win32Exception")
+            }
+
+            $Attributes = $ConsoleScreenBufferInfo.wAttributes
+        }
+    }
+
+    $Attributes
+}
+
+#===================================================================================================
+
 function Set-ConsoleBackgroundColor
 {
     $Color = [System.Drawing.Color]::Empty
@@ -575,6 +611,16 @@ public struct SMALL_RECT
 }
 
 [StructLayout(LayoutKind.Sequential)]
+public struct CONSOLE_SCREEN_BUFFER_INFO
+{
+    public COORD dwSize;
+    public COORD dwCursorPosition;
+    public ushort wAttributes;
+    public SMALL_RECT srWindow;
+    public COORD dwMaximumWindowSize;
+}
+
+[StructLayout(LayoutKind.Sequential)]
 public struct CONSOLE_SCREEN_BUFFER_INFOEX
 {
     public uint cbSize;
@@ -619,6 +665,10 @@ public static extern int GetConsoleMode(System.IntPtr hConsoleHandle, out uint l
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetConsoleMode(System.IntPtr hConsoleHandle, uint dwMode);
+
+[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern int GetConsoleScreenBufferInfo(System.IntPtr hConsoleOutput,
+    ref CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
@@ -680,6 +730,7 @@ Add-Type -MemberDefinition $MemberDefinition -Name "Kernel32" -Namespace "Win32"
 # Win32.Kernel32
 # Win32.Kernel32+COORD
 # Win32.Kernel32+SMALL_RECT
+# Win32.Kernel32+CONSOLE_SCREEN_BUFFER_INFO
 # Win32.Kernel32+CONSOLE_SCREEN_BUFFER_INFOEX
 # Win32.Kernel32+MEMORY_BASIC_INFORMATION
 
