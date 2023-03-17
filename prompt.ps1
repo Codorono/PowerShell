@@ -24,9 +24,9 @@ function prompt
     $WindowTitle = "{0} -- PowerShell {1}.{2}.{3} ({4})" -f $CurrentPath, $PSVersion.Major,
         $PSVersion.Minor, $PSVersion.Patch, ((Test-64BitProcess) ? "x64" : "x86")
 
-    if (Test-Path Variable:Title)
+    if (Test-Path Variable:ConsoleTitle)
     {
-        $WindowTitle = $WindowTitle + " -- " + $Title
+        $WindowTitle = $WindowTitle + " -- " + $ConsoleTitle
     }
 
     if (Test-Administrator)
@@ -39,7 +39,6 @@ function prompt
     # set prompt
 
     "{0}{1} " -f $CurrentPath, ('>' * ($NestedPromptLevel + 1))
-
 }
 
 #===================================================================================================
