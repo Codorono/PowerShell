@@ -8,7 +8,7 @@ function Get-KnownFolderPath
 {
     param
     (
-        [Parameter(Mandatory = $true)] [string] $FolderName,
+        [Parameter(Mandatory)] [string] $FolderName,
         [switch] $NoVerify
     )
 

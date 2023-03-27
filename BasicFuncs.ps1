@@ -100,6 +100,20 @@ function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
 
 #===================================================================================================
 
+function MkLink
+{
+    CMD /c MKLINK $args
+}
+
+#===================================================================================================
+
+function Done
+{
+    SEND WORKGROUP $([System.Environment]::MachineName) is done
+}
+
+#===================================================================================================
+
 function Get-Color
 {
     $Color = [System.Drawing.Color]::Empty
@@ -180,40 +194,6 @@ function Test-SearchPath([string] $File)
     }
 
     $Result
-}
-
-#===================================================================================================
-
-function Out-Speak
-{
-    [CmdletBinding()]
-    param([Parameter(Mandatory=$true, ValueFromPipeline=$true, ValueFromRemainingArguments=$true)] [string] $Text)
-
-    process
-    {
-        if ($Text.Length -ne 0)
-        {
-            [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Speech")
-
-            $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
-
-            $SpeechSynthesizer.Speak($Text)
-        }
-    }
-}
-
-#===================================================================================================
-
-function MkLink
-{
-    CMD /c MKLINK $args
-}
-
-#===================================================================================================
-
-function Done
-{
-    SEND WORKGROUP $([System.Environment]::MachineName) is done
 }
 
 #===================================================================================================

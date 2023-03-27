@@ -49,7 +49,7 @@ function Out-MessageBeep([MB_BEEP] $Type = [MB_BEEP]::MB_DEFAULT)
 
 function Show-MessageBox
 (
-    [Parameter(Mandatory = $true)] [string] $Text,
+    [Parameter(Mandatory)] [string] $Text,
     [string] $Caption,
     [uint] $Seconds = 0,
     [switch] $Ok,

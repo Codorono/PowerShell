@@ -6,13 +6,13 @@ Set-StrictMode -Version Latest
 
 function Set-LocationEx
 {
-    [CmdletBinding(DefaultParameterSetName="Path")]
+    [CmdletBinding(DefaultParameterSetName = "Path")]
     param
     (
-        [Parameter(Position=0, ParameterSetName="Path", ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [string] $Path,
 
-        [Parameter(ParameterSetName="LiteralPath", ValueFromPipelineByPropertyName=$true)]
+        [Parameter(ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
         [Alias("PSPath")]
         [Alias("LP")]
         [string] $LiteralPath,
