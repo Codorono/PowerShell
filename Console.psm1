@@ -547,7 +547,7 @@ public static extern int SetConsoleCursorPosition(
 public static extern System.IntPtr CreateFileW(
     [MarshalAs(UnmanagedType.LPWStr)] string lpFileName, uint dwDesiredAccess, uint dwShareMode,
     System.IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes,
-    System.IntPtr hTemplateFile); 
+    System.IntPtr hTemplateFile);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int CloseHandle(System.IntPtr hObject);
