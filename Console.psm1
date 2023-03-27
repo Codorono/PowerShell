@@ -550,7 +550,7 @@ public static extern System.IntPtr CreateFileW(
     System.IntPtr hTemplateFile); 
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-    public static extern int CloseHandle(System.IntPtr hObject);
+public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
 Add-Type -MemberDefinition $MemberDefinition -Name "Console" -Namespace "Win32"
