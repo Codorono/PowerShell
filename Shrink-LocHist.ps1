@@ -14,7 +14,7 @@ Set-StrictMode -Version Latest
 
 # list of locations
 
-$LocationList = New-Object "System.Collections.Generic.List[string]"
+$LocationList = New-Object -TypeName "System.Collections.Generic.List[string]"
 
 # get location history file path
 

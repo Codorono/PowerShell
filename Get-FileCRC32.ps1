@@ -2,7 +2,7 @@
 
 param
 (
-    [string[]] $Path = @("*"),
+    [string[]] $Path,
     [switch] $Recurse,
     [switch] $Force
 )
@@ -95,7 +95,7 @@ function Test-CalcCrc32Table
 
 # iterate through files
 
-Get-ChildItem -Path $Path -File -Attributes !Offline -Recurse: $Recurse -Force: $Force | ForEach-Object `
+Get-ChildItem -Path: $Path -Recurse: $Recurse -Force: $Force -Attributes !Offline -File | ForEach-Object `
 {
     # get file bytes
 

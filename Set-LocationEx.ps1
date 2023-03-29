@@ -9,15 +9,14 @@ function Set-LocationEx
     [CmdletBinding(DefaultParameterSetName = "Path")]
     param
     (
-        [Parameter(Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [Parameter(Mandatory, Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [string] $Path,
 
-        [Parameter(ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
+        [Parameter(Mandatory, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
         [Alias("PSPath")]
         [Alias("LP")]
         [string] $LiteralPath,
 
-        [Parameter()]
         [switch] $PassThru
     )
 
@@ -25,12 +24,12 @@ function Set-LocationEx
 
     if ($PSCmdlet.ParameterSetName -eq "LiteralPath")
     {
-        Set-Location -LiteralPath $LiteralPath -PassThru: $PassThru
+        Set-Location -LiteralPath: $LiteralPath -PassThru: $PassThru
     }
 
     else
     {
-        Set-Location -Path $Path -PassThru: $PassThru
+        Set-Location -Path: $Path -PassThru: $PassThru
     }
 
     # make sure location history file exists

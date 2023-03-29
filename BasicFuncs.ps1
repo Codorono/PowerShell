@@ -68,14 +68,8 @@ function Test-VirtualPC
 
 function Test-Administrator
 {
+#   (([System.Security.Principal.WindowsIdentity]::GetCurrent()).Groups -contains "S-1-5-32-544")
     ([System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
-#===================================================================================================
-
-function Test-Elevated
-{
-    (([System.Security.Principal.WindowsIdentity]::GetCurrent()).Groups -contains "S-1-5-32-544")
 }
 
 #===================================================================================================
@@ -158,13 +152,13 @@ function Get-Color
 
 #===================================================================================================
 
-function Search-Path([string] $File)
+function Search-Path([Parameter(Mandatory)] [string] $FileSpec)
 {
     # WHERE.exe "$File"
 
-    foreach ($Path in ($Env:Path -split ";"))
+    foreach ($EnvPath in ($Env:Path -split ";"))
     {
-        $FilePath = Join-Path $Path $File
+        $FilePath = Join-Path $EnvPath $FileSpec
 
         if (Test-Path $FilePath)
         {
@@ -175,7 +169,7 @@ function Search-Path([string] $File)
 
 #===================================================================================================
 
-function Test-SearchPath([string] $File)
+function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
 {
     # WHERE.exe /q "$File"
     # $LastExitCode -eq 0
@@ -184,9 +178,9 @@ function Test-SearchPath([string] $File)
 
     $Result = $false
 
-    foreach ($Path in ($Env:Path -split ";"))
+    foreach ($EnvPath in ($Env:Path -split ";"))
     {
-        if (Test-Path (Join-Path $Path $File))
+        if (Test-Path (Join-Path $EnvPath $FileSpec))
         {
             $Result = $true
             break

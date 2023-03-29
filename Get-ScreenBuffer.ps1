@@ -9,15 +9,15 @@ Set-StrictMode -Version Latest
 $Width = $Host.UI.RawUI.BufferSize.Width
 $Height = $Host.UI.RawUI.CursorPosition.Y
 
-$Rectangle = New-Object "System.Management.Automation.Host.Rectangle" 0, 0, $Width, $Height
+$Rectangle = New-Object -TypeName "System.Management.Automation.Host.Rectangle" -ArgumentList 0, 0, $Width, $Height
 
 # get screen buffer contents
 
-$Buffer = $Host.UI.RawUI.GetBufferContents($Rectangle)
+$Screen = $Host.UI.RawUI.GetBufferContents($Rectangle)
 
 # iterate through screen buffer lines
 
-$Line = New-Object "System.Text.StringBuilder" $Width
+$Line = New-Object -TypeName "System.Text.StringBuilder" -ArgumentList $Width
 
 for ($Row = 0; $Row -lt $Height; $Row++)
 {
@@ -27,7 +27,7 @@ for ($Row = 0; $Row -lt $Height; $Row++)
 
     for ($Col = 0; $Col -lt $Width; $Col++)
     {
-        [void] $Line.Append(($Buffer[$Row, $Col]).Character)
+        [void] $Line.Append(($Screen[$Row, $Col]).Character)
     }
 
     # output line

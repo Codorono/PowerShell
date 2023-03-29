@@ -21,7 +21,7 @@ function Out-Speak
     {
         if ($Text.Length -ne 0)
         {
-            $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+            $SpeechSynthesizer = New-Object -TypeName "System.Speech.Synthesis.SpeechSynthesizer"
 
             $SpeechSynthesizer.Speak($Text)
         }

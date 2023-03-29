@@ -47,7 +47,7 @@ function Enable-ConsoleVTProcessing
 
     if ($Screen -eq $INVALID_HANDLE_VALUE)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # get console mode
@@ -56,7 +56,7 @@ function Enable-ConsoleVTProcessing
 
     if ([Win32.Console]::GetConsoleMode($Screen, [ref] $ConsoleMode) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # determine if console mode needs adjustment
@@ -69,7 +69,7 @@ function Enable-ConsoleVTProcessing
 
         if ([Win32.Console]::SetConsoleMode($Screen, $ConsoleMode) -eq 0)
         {
-            throw (New-Object "System.ComponentModel.Win32Exception")
+            throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
         }
 
         Write-Output ("Console mode: 0x{0:X8}" -f $ConsoleMode)
@@ -79,7 +79,7 @@ function Enable-ConsoleVTProcessing
 
     if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 }
 
@@ -94,16 +94,16 @@ function Clear-Screen
 
     if ($Screen -eq $INVALID_HANDLE_VALUE)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # get console screen buffer info
 
-    $ConsoleScreenBufferInfo = New-Object "Win32.Console+CONSOLE_SCREEN_BUFFER_INFO"
+    $ConsoleScreenBufferInfo = New-Object -TypeName "Win32.Console+CONSOLE_SCREEN_BUFFER_INFO"
 
     if ([Win32.Console]::GetConsoleScreenBufferInfo($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # get fill size
@@ -112,7 +112,7 @@ function Clear-Screen
 
     # get top left coord
 
-    $Coord = New-Object "Win32.Console+COORD"
+    $Coord = New-Object -TypeName "Win32.Console+COORD"
 
     $Coord.X = 0
     $Coord.Y = 0
@@ -123,28 +123,28 @@ function Clear-Screen
 
     if ([Win32.Console]::FillConsoleOutputCharacterW($Screen, [char] " ", $FillSize, $Coord, [ref] $FillCount) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # fill screen buffer attributes
 
     if ([Win32.Console]::FillConsoleOutputAttribute($Screen, $ConsoleScreenBufferInfo.wAttributes, $FillSize, $Coord, [ref] $FillCount) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # move cursor to top left corner
 
     if ([Win32.Console]::SetConsoleCursorPosition($Screen, $Coord) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # close screen buffer
 
     if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 }
 
@@ -217,12 +217,12 @@ function Set-ConsoleBackgroundColor
 
     if ($Screen -eq $INVALID_HANDLE_VALUE)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # create console screen buffer info structure
 
-    $ConsoleScreenBufferInfo = New-Object "Win32.Console+CONSOLE_SCREEN_BUFFER_INFOEX"
+    $ConsoleScreenBufferInfo = New-Object -TypeName "Win32.Console+CONSOLE_SCREEN_BUFFER_INFOEX"
 
     $ConsoleScreenBufferInfo.cbSize = [System.Runtime.InteropServices.Marshal]::SizeOf($ConsoleScreenBufferInfo)
 
@@ -230,7 +230,7 @@ function Set-ConsoleBackgroundColor
 
     if ([Win32.Console]::GetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # set console background color
@@ -250,14 +250,14 @@ function Set-ConsoleBackgroundColor
 
     if ([Win32.Console]::SetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # close screen buffer
 
     if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 }
 
@@ -380,12 +380,12 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
     if ($Screen -eq $INVALID_HANDLE_VALUE)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # create console screen buffer info structure
 
-    $ConsoleScreenBufferInfo = New-Object "Win32.Console+CONSOLE_SCREEN_BUFFER_INFOEX"
+    $ConsoleScreenBufferInfo = New-Object -TypeName "Win32.Console+CONSOLE_SCREEN_BUFFER_INFOEX"
 
     $ConsoleScreenBufferInfo.cbSize = [System.Runtime.InteropServices.Marshal]::SizeOf($ConsoleScreenBufferInfo)
 
@@ -393,7 +393,7 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
     if ([Win32.Console]::GetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # set console colors
@@ -419,14 +419,14 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
     if ([Win32.Console]::SetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # close screen buffer
 
     if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 }
 

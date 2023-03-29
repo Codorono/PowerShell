@@ -3,7 +3,7 @@
 param
 (
     [string] $HashFile,
-    [string[]] $Path = @("*"),
+    [string[]] $Path,
     [switch] $Recurse,
     [switch] $Force
 )
@@ -42,7 +42,7 @@ Get-Content -Path $HashFile | ForEach-Object `
 
 # iterate through files
 
-Get-ChildItem -Path $Path -File -Attributes !Offline -Recurse: $Recurse -Force: $Force | ForEach-Object `
+Get-ChildItem -Path: $Path -Recurse: $Recurse -Force: $Force -Attributes !Offline -File | ForEach-Object `
 {
     # get file hash
 

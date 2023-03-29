@@ -62,7 +62,7 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
     {
         if ([Win32.Kernel32]::SetPriorityClass($ProcessHandle, $BackgroundMode) -eq 0)
         {
-            throw (New-Object "System.ComponentModel.Win32Exception")
+            throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
         }
     }
 
@@ -72,7 +72,7 @@ function Set-BackgroundPriorityMode([switch] $Begin, [switch] $End)
 
     if ($PriorityClass -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     # display priority class name
@@ -109,11 +109,11 @@ function Get-VolumeInformation([string] $DriveRoot)
         $DriveRoot += "\"
     }
 
-    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+    $VolumeName = New-Object -TypeName "System.Text.StringBuilder" -ArgumentList 256
     $VolumeSerialNumber = [uint] 0
     $MaximumComponentLength = [uint] 0
     $FileSystemFlags = [uint] 0
-    $FileSystemName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+    $FileSystemName = New-Object -TypeName "System.Text.StringBuilder" -ArgumentList 256
 
     [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
         [ref] $VolumeSerialNumber, [ref] $MaximumComponentLength, [ref] $FileSystemFlags,
@@ -135,7 +135,7 @@ function Get-VolumeName([string] $DriveRoot)
         $DriveRoot += "\"
     }
 
-    $VolumeName = New-Object "System.Text.StringBuilder" -ArgumentList 256
+    $VolumeName = New-Object -TypeName "System.Text.StringBuilder" -ArgumentList 256
 
     [void] [Win32.Kernel32]::GetVolumeInformationW($DriveRoot, $VolumeName, $VolumeName.Capacity,
         [System.IntPtr]::Zero, [System.IntPtr]::Zero, [System.IntPtr]::Zero,
@@ -172,7 +172,7 @@ function Get-MemoryInfo
 
     # create memory basic information structure
 
-    $MemoryBasicInformation = New-Object "Win32.Kernel32+MEMORY_BASIC_INFORMATION"
+    $MemoryBasicInformation = New-Object -TypeName "Win32.Kernel32+MEMORY_BASIC_INFORMATION"
 
     # query virtual memory
 
@@ -181,7 +181,7 @@ function Get-MemoryInfo
 
     if ($Result -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw (New-Object -TypeName "System.ComponentModel.Win32Exception")
     }
 
     Write-Output $MemoryBasicInformation
