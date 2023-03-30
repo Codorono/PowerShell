@@ -22,15 +22,7 @@ function Set-LocationEx
 
     # set location
 
-    if ($PSCmdlet.ParameterSetName -eq "LiteralPath")
-    {
-        Set-Location -LiteralPath: $LiteralPath -PassThru: $PassThru
-    }
-
-    else
-    {
-        Set-Location -Path: $Path -PassThru: $PassThru
-    }
+    Set-Location @PSBoundParameters
 
     # make sure location history file exists
 
@@ -46,11 +38,11 @@ function Set-LocationEx
 
     $PathInfo = $ExecutionContext.SessionState.Path.CurrentLocation
 
-    $CurrentLocation = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
+    $CurrentPath = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
 
     # add current location to location history file
 
-    Add-Content -Path $LocHistFilePath -Value $CurrentLocation -Encoding UTF8NoBOM
+    Add-Content -Path $LocHistFilePath -Value $CurrentPath -Encoding UTF8NoBOM
 }
 
 #===================================================================================================
