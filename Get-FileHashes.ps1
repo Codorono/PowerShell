@@ -19,7 +19,7 @@ $Hashes = @{}
 
 # iterate through files
 
-Get-ChildItem -Path: $Path -Recurse: $Recurse -Force: $Force -Attributes !Offline -File | ForEach-Object `
+Get-ChildItem @PSBoundParameters -Attributes !Offline -File | ForEach-Object `
 {
     # get file hash
 

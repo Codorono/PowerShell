@@ -2,7 +2,9 @@
 
 param
 (
+    [Parameter(Mandatory)]
     [string] $HashFile,
+
     [string[]] $Path,
     [switch] $Recurse,
     [switch] $Force
@@ -42,7 +44,9 @@ Get-Content -Path $HashFile | ForEach-Object `
 
 # iterate through files
 
-Get-ChildItem -Path: $Path -Recurse: $Recurse -Force: $Force -Attributes !Offline -File | ForEach-Object `
+[void] $PSBoundParameters.Remove("HashFile")
+
+Get-ChildItem @PSBoundParameters -Attributes !Offline -File | ForEach-Object `
 {
     # get file hash
 
