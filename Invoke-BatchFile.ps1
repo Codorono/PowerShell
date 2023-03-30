@@ -1,6 +1,12 @@
 ﻿#===================================================================================================
 
-param([string] $Path, [string] $Parameters)
+param
+(
+    [Parameter(Mandatory)]
+    [string] $Path,
+
+    [string] $Parameters
+)
 
 #===================================================================================================
 
@@ -18,7 +24,7 @@ $TempFile = [System.IO.Path]::GetTempFileName()
 
 # execute batch file
 
-CMD /c "`"$Path`" $Parameters && SET" | Out-File -FilePath $TempFile
+CMD.exe /c "`"$Path`" $Parameters && SET" | Out-File -FilePath $TempFile
 
 # loop through batch file output
 
