@@ -96,14 +96,14 @@ function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
 
 function MkLink
 {
-    CMD /c MKLINK $args
+    CMD.exe /c MKLINK $args
 }
 
 #===================================================================================================
 
 function Done
 {
-    SEND WORKGROUP $([System.Environment]::MachineName) is done
+    SEND.exe WORKGROUP $([System.Environment]::MachineName) is done
 }
 
 #===================================================================================================
