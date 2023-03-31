@@ -31,7 +31,7 @@ function prompt
 
     if (Test-Administrator)
     {
-        $WindowTitle = $WindowTitle + " -- Administrator"
+        $WindowTitle = "Administrator: " + $WindowTitle
     }
 
     $Host.UI.RawUI.WindowTitle = $WindowTitle

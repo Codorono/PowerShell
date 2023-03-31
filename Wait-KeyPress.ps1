@@ -1,11 +1,15 @@
 ﻿#===================================================================================================
 
+using namespace System.Management.Automation.Host
+
+#===================================================================================================
+
 Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-Write-Host -NoNewLine "Press any key to continue . . . "
+Write-Host "Press any key to continue . . . " -NoNewLine 
 
-[void] $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+[void] $Host.UI.RawUI.ReadKey([ReadKeyOptions]::NoEcho -bor [ReadKeyOptions]::IncludeKeyDown)
 
 #===================================================================================================

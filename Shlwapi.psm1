@@ -8,7 +8,7 @@ function Format-ByteSize([long] $Number, [switch] $Truncate)
 {
     $Flags = $Truncate ? [SFBS_FLAGS]::TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS : [SFBS_FLAGS]::ROUND_TO_NEAREST_DISPLAYED_DIGIT
 
-    $StringBuilder = New-Object -TypeName "System.Text.StringBuilder" -ArgumentList 16
+    $StringBuilder = New-Object "System.Text.StringBuilder" -ArgumentList 16
 
     [Win32.Shlwapi]::StrFormatByteSizeEx($Number, $Flags, $StringBuilder, $StringBuilder.Capacity)
 

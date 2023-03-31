@@ -28,7 +28,7 @@ CMD.exe /c "`"$Path`" $Parameters && SET" | Out-File -FilePath $TempFile
 
 # loop through batch file output
 
-Get-Content -Path $TempFile | ForEach-Object -Process `
+Get-Content -Path $TempFile | ForEach-Object `
 {
     # write output
 

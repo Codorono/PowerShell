@@ -47,6 +47,6 @@ function Set-LocationEx
 
 #===================================================================================================
 
-Set-Alias -Name "cd" -Value "Set-LocationEx" -Option AllScope
+Set-Alias "cd" "Set-LocationEx" -Option AllScope
 
 #===================================================================================================

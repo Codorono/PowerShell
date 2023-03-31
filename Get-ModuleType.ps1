@@ -14,14 +14,14 @@ $ModuleType = "invalid"
 
 $FilePath = (Get-ChildItem -Path $FileSpec).FullName
 
-$FileStream = New-Object -TypeName "System.IO.FileStream" -ArgumentList $FilePath,
+$FileStream = New-Object "System.IO.FileStream" -ArgumentList $FilePath,
     ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read), ([System.IO.FileShare]::Read)
 
 try
 {
     # get binary stream reader
 
-    $BinaryReader = New-Object -TypeName "System.IO.BinaryReader" -ArgumentList $FileStream
+    $BinaryReader = New-Object "System.IO.BinaryReader" -ArgumentList $FileStream
 
     try
     {

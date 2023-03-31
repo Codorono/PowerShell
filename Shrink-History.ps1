@@ -15,7 +15,7 @@ Set-StrictMode -Version Latest
 
 # list of commands
 
-$CommandList = New-Object -TypeName "System.Collections.Generic.List[string]"
+$CommandList = New-Object "System.Collections.Generic.List[string]"
 
 # get history file path
 

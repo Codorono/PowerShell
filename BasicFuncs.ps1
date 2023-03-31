@@ -176,18 +176,15 @@ function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
 
     # Get-Command -Name $File -CommandType "Application" -ErrorAction "SilentlyContinue"
 
-    $Result = $false
-
     foreach ($EnvPath in ($Env:Path -split ";"))
     {
         if (Test-Path (Join-Path $EnvPath $FileSpec))
         {
-            $Result = $true
-            break
+            return $true
         }
     }
 
-    $Result
+    $false
 }
 
 #===================================================================================================
