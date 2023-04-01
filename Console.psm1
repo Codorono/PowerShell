@@ -85,6 +85,41 @@ function Enable-ConsoleVTProcessing
 
 #===================================================================================================
 
+function Get-ScreenAttributes
+{
+    # get screen buffer
+
+    $Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+        $FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
+
+    if ($Screen -eq $INVALID_HANDLE_VALUE)
+    {
+        throw (New-Object "System.ComponentModel.Win32Exception")
+    }
+
+    # get console screen buffer info
+
+    $ConsoleScreenBufferInfo = New-Object "Win32.Console+CONSOLE_SCREEN_BUFFER_INFO"
+
+    if ([Win32.Console]::GetConsoleScreenBufferInfo($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
+    {
+        throw (New-Object "System.ComponentModel.Win32Exception")
+    }
+
+    # get attributes
+
+    $ConsoleScreenBufferInfo.wAttributes
+
+    # close screen buffer
+
+    if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+    {
+        throw (New-Object "System.ComponentModel.Win32Exception")
+    }
+}
+
+#===================================================================================================
+
 function Clear-Screen
 {
     # get screen buffer

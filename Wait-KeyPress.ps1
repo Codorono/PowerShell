@@ -8,7 +8,9 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-Write-Host "Press any key to continue . . . " -NoNewLine 
+$Host.UI.Write("`e[32mPress any key to continue . . . `e[37m")
+
+$Host.UI.RawUI.FlushInputBuffer()
 
 [void] $Host.UI.RawUI.ReadKey([ReadKeyOptions]::NoEcho -bor [ReadKeyOptions]::IncludeKeyDown)
 
