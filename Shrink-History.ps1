@@ -2,7 +2,7 @@
 
 param
 (
-    [int] $MaxCommandCount = -1,
+    [int] $MaxCommandCount = 0,
     [switch] $IgnoreCase,
     [switch] $Verbose
 )
@@ -15,7 +15,7 @@ Set-StrictMode -Version Latest
 
 # list of commands
 
-$CommandList = New-Object "System.Collections.Generic.List[string]"
+$CommandList = New-Object "System.Collections.Generic.List[string]" -ArgumentList 100000
 
 # get history file path
 
@@ -26,7 +26,7 @@ $HistoryFilePath = (Get-PSReadlineOption).HistorySavePath
 $Command = ""
 $OldCommandCount = 0
 
-Get-Content -Path $HistoryFilePath | ForEach-Object `
+Get-Content $HistoryFilePath | ForEach-Object `
 {
     # skip blank lines
 
@@ -116,13 +116,13 @@ if (($MaxCommandCount -gt 0) -and ($NewCommandCount -gt $MaxCommandCount))
 
 # rewrite history file
 
-Set-Content -Path $HistoryFilePath -Value $CommandList -Encoding UTF8NoBOM
+Set-Content $HistoryFilePath $CommandList -Encoding UTF8NoBOM
 
 # show statistics
 
 $DifCommandCount = $OldCommandCount - $NewCommandCount
 
-Write-Host ("{0} command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
+Write-Host ("{0} duplicate command{1} removed, {2} command{3} retained" -f $DifCommandCount, (Get-Plural $DifCommandCount),
     $NewCommandCount, (Get-Plural $NewCommandCount)) -ForegroundColor Cyan
 
 #===================================================================================================

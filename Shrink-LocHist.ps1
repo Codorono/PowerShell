@@ -2,7 +2,7 @@
 
 param
 (
-    [int] $MaxLocationCount = -1,
+    [int] $MaxLocationCount = 0,
     [switch] $Verbose
 )
 
@@ -14,18 +14,18 @@ Set-StrictMode -Version Latest
 
 # list of locations
 
-$LocationList = New-Object "System.Collections.Generic.List[string]"
+$LocationList = New-Object "System.Collections.Generic.List[string]" -ArgumentList 10000
 
 # get location history file path
 
 $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
-$LocHistFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
+$HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
 # iterate through lines of location history file
 
 $OldLocationCount = 0
 
-Get-Content -Path $LocHistFilePath | ForEach-Object `
+Get-Content $HistoryFilePath | ForEach-Object `
 {
     # skip blank lines
 
@@ -83,13 +83,13 @@ if (($MaxLocationCount -gt 0) -and ($NewLocationCount -gt $MaxLocationCount))
 
 # rewrite location history file
 
-Set-Content -Path $LocHistFilePath -Value $LocationList -Encoding UTF8NoBOM
+Set-Content $HistoryFilePath $LocationList -Encoding UTF8NoBOM
 
 # show statistics
 
 $DifLocationCount = $OldLocationCount - $NewLocationCount
 
-Write-Host ("{0} location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
+Write-Host ("{0} duplicate location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
     $NewLocationCount, (Get-Plural $NewLocationCount)) -ForegroundColor Cyan
 
 #===================================================================================================

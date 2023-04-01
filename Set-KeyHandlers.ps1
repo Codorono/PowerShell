@@ -17,9 +17,9 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
     # get location history file path
 
     $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
-    $LocHistFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
+    $HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
-    if (Test-Path $LocHistFilePath)
+    if (Test-Path $HistoryFilePath)
     {
         # list of locations
 
@@ -27,7 +27,7 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
 
         # iterate through lines of location history file
 
-        Get-Content -Path $LocHistFilePath | ForEach-Object `
+        Get-Content $HistoryFilePath | ForEach-Object `
         {
             # skip blank lines
 
@@ -173,7 +173,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
 
         $Command = ""
 
-        Get-Content -Path $HistoryFilePath | ForEach-Object `
+        Get-Content $HistoryFilePath | ForEach-Object `
         {
             # skip blank lines
 

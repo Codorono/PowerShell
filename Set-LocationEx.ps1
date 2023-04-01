@@ -27,11 +27,11 @@ function Set-LocationEx
     # make sure location history file exists
 
     $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
-    $LocHistFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
+    $HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
-    if (-not (Test-Path $LocHistFilePath))
+    if (-not (Test-Path $HistoryFilePath))
     {
-        New-Item -Path $LocHistFilePath | Out-Null
+        New-Item $HistoryFilePath | Out-Null
     }
 
     # get current location
@@ -42,7 +42,7 @@ function Set-LocationEx
 
     # add current location to location history file
 
-    Add-Content -Path $LocHistFilePath -Value $CurrentPath -Encoding UTF8NoBOM
+    Add-Content $HistoryFilePath $CurrentPath -Encoding UTF8NoBOM
 }
 
 #===================================================================================================
