@@ -12,7 +12,7 @@ $ModuleType = "invalid"
 
 # open file stream
 
-$FilePath = (Get-ChildItem -Path $FileSpec).FullName
+$FilePath = (Get-ChildItem $FileSpec).FullName
 
 $FileStream = New-Object "System.IO.FileStream" -ArgumentList $FilePath,
     ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read), ([System.IO.FileShare]::Read)

@@ -22,7 +22,7 @@ $Hashes = @{}
 
 # iterate through lines of hash file
 
-Get-Content -Path $HashFile | ForEach-Object `
+Get-Content $HashFile | ForEach-Object `
 {
     $Hash = $_.Substring(0, 32)
     $File = $_.Substring(33)

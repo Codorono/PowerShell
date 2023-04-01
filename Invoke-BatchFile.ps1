@@ -24,11 +24,11 @@ $TempFile = [System.IO.Path]::GetTempFileName()
 
 # execute batch file
 
-CMD.exe /c "`"$Path`" $Parameters && SET" | Out-File -FilePath $TempFile
+CMD.exe /c "`"$Path`" $Parameters && SET" | Out-File $TempFile -Encoding UTF8NoBOM
 
 # loop through batch file output
 
-Get-Content -Path $TempFile | ForEach-Object `
+Get-Content $TempFile | ForEach-Object `
 {
     # write output
 
@@ -41,12 +41,12 @@ Get-Content -Path $TempFile | ForEach-Object `
 
     elseif (-not $_.StartsWith("PROMPT="))
     {
-        Set-Item -Path "Env:$($matches[1])" -Value $matches[2]
+        Set-Item "Env:$($matches[1])" $matches[2]
     }
 }
 
 # delete temp file
 
-Remove-Item -Path $TempFile
+Remove-Item $TempFile
 
 #===================================================================================================

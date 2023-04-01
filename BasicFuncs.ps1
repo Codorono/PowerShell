@@ -162,7 +162,7 @@ function Search-Path([Parameter(Mandatory)] [string] $FileSpec)
 
         if (Test-Path $FilePath)
         {
-            Get-ChildItem -Path $FilePath -File | ForEach-Object { $_.FullName }
+            Get-ChildItem $FilePath -File | ForEach-Object { $_.FullName }
         }
     }
 }
