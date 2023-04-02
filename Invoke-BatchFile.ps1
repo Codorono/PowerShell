@@ -5,12 +5,9 @@ param
     [Parameter(Mandatory)]
     [string] $Path,
 
-    [string] $Parameters
+    [Parameter(ValueFromRemainingArguments)]
+    [string] $Args
 )
-
-#===================================================================================================
-
-Set-StrictMode -Version Latest
 
 #===================================================================================================
 
@@ -18,23 +15,19 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-# create temp file
+Set-StrictMode -Version Latest
 
-$TempFile = [System.IO.Path]::GetTempFileName()
+#===================================================================================================
 
 # execute batch file
 
-CMD.exe /c "`"$Path`" $Parameters && SET" | Out-File $TempFile -Encoding UTF8NoBOM
-
-# loop through batch file output
-
-Get-Content $TempFile | ForEach-Object `
+CMD.exe /c "`"$Path`" $Args && SET" | ForEach-Object `
 {
     # write output
 
     if (($_.StartsWith("[DEBUG:")) -or ($_.StartsWith("[ERROR:")) -or ($_ -notmatch "([^=]+)=(.+)"))
     {
-       $_
+        Write-Output $_
     }
 
     # set environment variable
@@ -44,9 +37,5 @@ Get-Content $TempFile | ForEach-Object `
         Set-Item "Env:$($matches[1])" $matches[2]
     }
 }
-
-# delete temp file
-
-Remove-Item $TempFile
 
 #===================================================================================================
