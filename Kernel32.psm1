@@ -189,38 +189,38 @@ function Get-MemoryInfo
 
 #===================================================================================================
 
-Set-Variable -Name "GENERIC_READ" -Value 0x80000000u -Option Constant
-Set-Variable -Name "GENERIC_WRITE" -Value 0x40000000u -Option Constant
+Set-Variable "GENERIC_READ" 0x80000000u -Option Constant
+Set-Variable "GENERIC_WRITE" 0x40000000u -Option Constant
 
-Set-Variable -Name "FILE_SHARE_READ" -Value 0x00000001u -Option Constant
-Set-Variable -Name "FILE_SHARE_WRITE" -Value 0x00000002u -Option Constant
-Set-Variable -Name "FILE_SHARE_DELETE" -Value 0x00000004u -Option Constant
+Set-Variable "FILE_SHARE_READ" 0x00000001u -Option Constant
+Set-Variable "FILE_SHARE_WRITE" 0x00000002u -Option Constant
+Set-Variable "FILE_SHARE_DELETE" 0x00000004u -Option Constant
 
-Set-Variable -Name "CREATE_NEW" -Value 1u -Option Constant
-Set-Variable -Name "CREATE_ALWAYS" -Value 2u -Option Constant
-Set-Variable -Name "OPEN_EXISTING" -Value 3u -Option Constant
-Set-Variable -Name "OPEN_ALWAYS" -Value 4u -Option Constant
-Set-Variable -Name "TRUNCATE_EXISTING" -Value 5u -Option Constant
+Set-Variable "CREATE_NEW" 1u -Option Constant
+Set-Variable "CREATE_ALWAYS" 2u -Option Constant
+Set-Variable "OPEN_EXISTING" 3u -Option Constant
+Set-Variable "OPEN_ALWAYS" 4u -Option Constant
+Set-Variable "TRUNCATE_EXISTING" 5u -Option Constant
 
-Set-Variable -Name "FILE_TYPE_UNKNOWN" -Value 0x0000u -Option Constant
-Set-Variable -Name "FILE_TYPE_DISK" -Value 0x0001u -Option Constant
-Set-Variable -Name "FILE_TYPE_CHAR" -Value 0x0002u -Option Constant
-Set-Variable -Name "FILE_TYPE_PIPE" -Value 0x0003u -Option Constant
-Set-Variable -Name "FILE_TYPE_REMOTE" -Value 0x8000u -Option Constant
+Set-Variable "FILE_TYPE_UNKNOWN" 0x0000u -Option Constant
+Set-Variable "FILE_TYPE_DISK" 0x0001u -Option Constant
+Set-Variable "FILE_TYPE_CHAR" 0x0002u -Option Constant
+Set-Variable "FILE_TYPE_PIPE" 0x0003u -Option Constant
+Set-Variable "FILE_TYPE_REMOTE" 0x8000u -Option Constant
 
-Set-Variable -Name "NORMAL_PRIORITY_CLASS" -Value 0x00000020u -Option Constant
-Set-Variable -Name "IDLE_PRIORITY_CLASS" -Value 0x00000040u -Option Constant
-Set-Variable -Name "HIGH_PRIORITY_CLASS" -Value 0x00000080u -Option Constant
-Set-Variable -Name "REALTIME_PRIORITY_CLASS" -Value 0x00000100u -Option Constant
-Set-Variable -Name "BELOW_NORMAL_PRIORITY_CLASS" -Value 0x00004000u -Option Constant
-Set-Variable -Name "ABOVE_NORMAL_PRIORITY_CLASS" -Value 0x00008000u -Option Constant
+Set-Variable "NORMAL_PRIORITY_CLASS" 0x00000020u -Option Constant
+Set-Variable "IDLE_PRIORITY_CLASS" 0x00000040u -Option Constant
+Set-Variable "HIGH_PRIORITY_CLASS" 0x00000080u -Option Constant
+Set-Variable "REALTIME_PRIORITY_CLASS" 0x00000100u -Option Constant
+Set-Variable "BELOW_NORMAL_PRIORITY_CLASS" 0x00004000u -Option Constant
+Set-Variable "ABOVE_NORMAL_PRIORITY_CLASS" 0x00008000u -Option Constant
 
-Set-Variable -Name "PROCESS_MODE_BACKGROUND_BEGIN" -Value 0x00100000u -Option Constant
-Set-Variable -Name "PROCESS_MODE_BACKGROUND_END" -Value 0x00200000u -Option Constant
+Set-Variable "PROCESS_MODE_BACKGROUND_BEGIN" 0x00100000u -Option Constant
+Set-Variable "PROCESS_MODE_BACKGROUND_END" 0x00200000u -Option Constant
 
-Set-Variable -Name "DDD_REMOVE_DEFINITION" -Value 0x00000002u -Option Constant
+Set-Variable "DDD_REMOVE_DEFINITION" 0x00000002u -Option Constant
 
-Set-Variable -Name "INVALID_HANDLE_VALUE" -Value ([System.IntPtr] -1) -Option Constant
+Set-Variable "INVALID_HANDLE_VALUE" ([System.IntPtr] -1) -Option Constant
 
 #===================================================================================================
 
@@ -300,7 +300,7 @@ public static extern System.IntPtr CreateFileW(
     public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
-Add-Type -MemberDefinition $MemberDefinition -Name "Kernel32" -Namespace "Win32"
+Add-Type "Kernel32" $MemberDefinition -Namespace "Win32"
 
 # Types are:
 # Win32.Kernel32

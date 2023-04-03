@@ -6,7 +6,7 @@ param
     [string] $Path,
 
     [Parameter(ValueFromRemainingArguments)]
-    [string] $Args
+    [string] $Parms
 )
 
 #===================================================================================================
@@ -21,7 +21,7 @@ Set-StrictMode -Version Latest
 
 # execute batch file
 
-CMD.exe /c "`"$Path`" $Args && SET" | ForEach-Object `
+CMD.exe /c "`"$Path`" $Parms && SET" | ForEach-Object `
 {
     # write output
 

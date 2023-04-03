@@ -67,7 +67,7 @@ function Get-KnownFolderPath
 
     # get known folder path
 
-    $Flags = $NoVerify ? [KF_FLAG]::DONT_VERIFY : [KF_FLAG]::DEFAULT
+    $Flags = $NoVerify ? $KF_FLAG_DONT_VERIFY : $KF_FLAG_DEFAULT
 
     $PathPtr = [System.IntPtr]::Zero
 
@@ -84,14 +84,11 @@ function Get-KnownFolderPath
 
 #===================================================================================================
 
-enum KF_FLAG
-{
-    DEFAULT = 0x00000000
-    CREATE = 0x00008000
-    DONT_VERIFY = 0x00004000
-    INIT = 0x00000800
-    DEFAULT_PATH = 0x00000400
-}
+Set-Variable "KF_FLAG_DEFAULT" 0x00000000 -Option Constant
+Set-Variable "KF_FLAG_CREATE" 0x00008000 -Option Constant
+Set-Variable "KF_FLAG_DONT_VERIFY" 0x00004000 -Option Constant
+Set-Variable "KF_FLAG_INIT" 0x00000800 -Option Constant
+Set-Variable "KF_FLAG_DEFAULT_PATH" 0x00000400 -Option Constant
 
 #===================================================================================================
 
@@ -256,6 +253,6 @@ public static extern void SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct
     uint dwFlags, System.IntPtr hToken, out System.IntPtr pszPath);
 "@
 
-Add-Type -MemberDefinition $MemberDefinition -Name "Shell32" -Namespace "Win32"
+Add-Type "Shell32" $MemberDefinition -Namespace "Win32"
 
 #===================================================================================================

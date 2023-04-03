@@ -6,7 +6,7 @@ Set-StrictMode -Version Latest
 
 function Format-ByteSize([long] $Number, [switch] $Truncate)
 {
-    $Flags = $Truncate ? [SFBS_FLAGS]::TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS : [SFBS_FLAGS]::ROUND_TO_NEAREST_DISPLAYED_DIGIT
+    $Flags = $Truncate ? $SFBS_FLAGS_TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS : $SFBS_FLAGS_ROUND_TO_NEAREST_DISPLAYED_DIGIT
 
     $StringBuilder = New-Object "System.Text.StringBuilder" -ArgumentList 16
 
@@ -17,11 +17,8 @@ function Format-ByteSize([long] $Number, [switch] $Truncate)
 
 #===================================================================================================
 
-enum SFBS_FLAGS
-{
-    ROUND_TO_NEAREST_DISPLAYED_DIGIT = 0x0001
-    TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS = 0x0002
-}
+Set-Variable "SFBS_FLAGS_ROUND_TO_NEAREST_DISPLAYED_DIGIT" 0x0001 -Option Constant
+Set-Variable "SFBS_FLAGS_TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS" 0x0002 -Option Constant
 
 #===================================================================================================
 
@@ -32,6 +29,6 @@ public static extern void StrFormatByteSizeEx(long ull, int flags,
     [MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, uint cchBuf);
 "@
 
-Add-Type -MemberDefinition $MemberDefinition -Name "Shlwapi" -Namespace "Win32"
+Add-Type "Shlwapi" $MemberDefinition -Namespace "Win32"
 
 #===================================================================================================

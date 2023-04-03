@@ -193,7 +193,7 @@ function Set-ConsoleBackgroundColor
     {
         # get default color
 
-        $Color = [System.Drawing.ColorTranslator]::FromWin32((Get-ItemPropertyValue -Path "HKCU:\Console" -Name "ColorTable00"))
+        $Color = [System.Drawing.ColorTranslator]::FromWin32((Get-ItemPropertyValue "HKCU:\Console" "ColorTable00"))
     }
 
     elseif ($args.Count -eq 1)
@@ -310,11 +310,11 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
         for ($Color = 0; $Color -lt 16; $Color++)
         {
-            $Colors += Get-ItemPropertyValue -Path "HKCU:\Console" -Name ("ColorTable{0:d2}" -f $Color)
+            $Colors += Get-ItemPropertyValue "HKCU:\Console" ("ColorTable{0:d2}" -f $Color)
         }
 
-        $Attributes = Get-ItemPropertyValue -Path "HKCU:\Console" -Name "ScreenColors"
-        $PopupAttributes = Get-ItemPropertyValue -Path "HKCU:\Console" -Name "PopupColors"
+        $Attributes = Get-ItemPropertyValue "HKCU:\Console" "ScreenColors"
+        $PopupAttributes = Get-ItemPropertyValue "HKCU:\Console" "PopupColors"
     }
 
     else
@@ -467,32 +467,32 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 #===================================================================================================
 
-Set-Variable -Name "STD_INPUT_HANDLE" -Value 0xFFFFFFF6u -Option Constant
-Set-Variable -Name "STD_OUTPUT_HANDLE" -Value 0xFFFFFFF5u -Option Constant
-Set-Variable -Name "STD_ERROR_HANDLE" -Value 0xFFFFFFF4u -Option Constant
+Set-Variable "STD_INPUT_HANDLE" 0xFFFFFFF6u -Option Constant
+Set-Variable "STD_OUTPUT_HANDLE" 0xFFFFFFF5u -Option Constant
+Set-Variable "STD_ERROR_HANDLE" 0xFFFFFFF4u -Option Constant
 
-Set-Variable -Name "GENERIC_READ" -Value 0x80000000u -Option Constant
-Set-Variable -Name "GENERIC_WRITE" -Value 0x40000000u -Option Constant
+Set-Variable "GENERIC_READ" 0x80000000u -Option Constant
+Set-Variable "GENERIC_WRITE" 0x40000000u -Option Constant
 
-Set-Variable -Name "FILE_SHARE_READ" -Value 0x00000001u -Option Constant
-Set-Variable -Name "FILE_SHARE_WRITE" -Value 0x00000002u -Option Constant
-Set-Variable -Name "FILE_SHARE_DELETE" -Value 0x00000004u -Option Constant
+Set-Variable "FILE_SHARE_READ" 0x00000001u -Option Constant
+Set-Variable "FILE_SHARE_WRITE" 0x00000002u -Option Constant
+Set-Variable "FILE_SHARE_DELETE" 0x00000004u -Option Constant
 
-Set-Variable -Name "CREATE_NEW" -Value 1u -Option Constant
-Set-Variable -Name "CREATE_ALWAYS" -Value 2u -Option Constant
-Set-Variable -Name "OPEN_EXISTING" -Value 3u -Option Constant
-Set-Variable -Name "OPEN_ALWAYS" -Value 4u -Option Constant
-Set-Variable -Name "TRUNCATE_EXISTING" -Value 5u -Option Constant
+Set-Variable "CREATE_NEW" 1u -Option Constant
+Set-Variable "CREATE_ALWAYS" 2u -Option Constant
+Set-Variable "OPEN_EXISTING" 3u -Option Constant
+Set-Variable "OPEN_ALWAYS" 4u -Option Constant
+Set-Variable "TRUNCATE_EXISTING" 5u -Option Constant
 
-Set-Variable -Name "FILE_TYPE_UNKNOWN" -Value 0x0000u -Option Constant
-Set-Variable -Name "FILE_TYPE_DISK" -Value 0x0001u -Option Constant
-Set-Variable -Name "FILE_TYPE_CHAR" -Value 0x0002u -Option Constant
-Set-Variable -Name "FILE_TYPE_PIPE" -Value 0x0003u -Option Constant
-Set-Variable -Name "FILE_TYPE_REMOTE" -Value 0x8000u -Option Constant
+Set-Variable "FILE_TYPE_UNKNOWN" 0x0000u -Option Constant
+Set-Variable "FILE_TYPE_DISK" 0x0001u -Option Constant
+Set-Variable "FILE_TYPE_CHAR" 0x0002u -Option Constant
+Set-Variable "FILE_TYPE_PIPE" 0x0003u -Option Constant
+Set-Variable "FILE_TYPE_REMOTE" 0x8000u -Option Constant
 
-Set-Variable -Name "ENABLE_VIRTUAL_TERMINAL_PROCESSING" -Value 0x0004u -Option Constant
+Set-Variable "ENABLE_VIRTUAL_TERMINAL_PROCESSING" 0x0004u -Option Constant
 
-Set-Variable -Name "INVALID_HANDLE_VALUE" -Value ([System.IntPtr] -1) -Option Constant
+Set-Variable "INVALID_HANDLE_VALUE" ([System.IntPtr] -1) -Option Constant
 
 #===================================================================================================
 
@@ -588,7 +588,7 @@ public static extern System.IntPtr CreateFileW(
 public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
-Add-Type -MemberDefinition $MemberDefinition -Name "Console" -Namespace "Win32"
+Add-Type "Console" $MemberDefinition -Namespace "Win32"
 
 # Types are:
 # Win32.Console

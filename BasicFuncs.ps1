@@ -101,6 +101,27 @@ function MkLink
 
 #===================================================================================================
 
+function Code
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
+}
+
+#===================================================================================================
+
+function Npm
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
+}
+
+#===================================================================================================
+
+function Npx
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
+}
+
+#===================================================================================================
+
 function Done
 {
     SEND.exe WORKGROUP $([System.Environment]::MachineName) is done
@@ -174,7 +195,7 @@ function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
     # WHERE.exe /q "$File"
     # $LastExitCode -eq 0
 
-    # Get-Command -Name $File -CommandType "Application" -ErrorAction "SilentlyContinue"
+    # Get-Command $File -CommandType "Application" -ErrorAction "SilentlyContinue"
 
     foreach ($EnvPath in ($Env:Path -split ";"))
     {
@@ -185,6 +206,24 @@ function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
     }
 
     $false
+}
+
+#===================================================================================================
+
+function Out-Speak
+{
+    [CmdletBinding()]
+    param([Parameter(ValueFromPipeline, ValueFromRemainingArguments)] [string] $Text)
+
+    process
+    {
+        if ($Text.Length -ne 0)
+        {
+            $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+
+            $SpeechSynthesizer.Speak($Text)
+        }
+    }
 }
 
 #===================================================================================================
