@@ -32,6 +32,26 @@ function Get-Plurale($Number)
 
 #===================================================================================================
 
+function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
+{
+    if ($String2.Length -ne 0)
+    {
+        if ($String1.Length -ne 0)
+        {
+            if (-not (($String1.EndsWith($Separator)) -or ($String2.StartsWith($Separator))))
+            {
+                $String1 += $Separator
+            }
+        }
+
+        $String1 += $String2
+    }
+
+    $String1
+}
+
+#===================================================================================================
+
 function Get-OSVersion
 {
     # Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00
@@ -57,6 +77,14 @@ function Test-64BitSystem
 
 #===================================================================================================
 
+function Test-Administrator
+{
+#   (([System.Security.Principal.WindowsIdentity]::GetCurrent()).Groups -contains "S-1-5-32-544")
+    ([System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+#===================================================================================================
+
 function Test-VirtualPC
 {
     $Baseboard = Get-CimInstance -Namespace "root\CIMV2" -ClassName "Win32_Baseboard"
@@ -66,65 +94,39 @@ function Test-VirtualPC
 
 #===================================================================================================
 
-function Test-Administrator
+function Search-Path([Parameter(Mandatory)] [string] $FileSpec)
 {
-#   (([System.Security.Principal.WindowsIdentity]::GetCurrent()).Groups -contains "S-1-5-32-544")
-    ([System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+    # WHERE.exe "$File"
+
+    foreach ($EnvPath in ($Env:Path -split ";"))
+    {
+        $FilePath = Join-Path $EnvPath $FileSpec
+
+        if (Test-Path $FilePath)
+        {
+            Get-ChildItem $FilePath -File | ForEach-Object { $_.FullName }
+        }
+    }
 }
 
 #===================================================================================================
 
-function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
+function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
 {
-    if ($String2.Length -ne 0)
-    {
-        if ($String1.Length -ne 0)
-        {
-            if (-not (($String1.EndsWith($Separator)) -or ($String2.StartsWith($Separator))))
-            {
-                $String1 += $Separator
-            }
-        }
+    # WHERE.exe /q "$File"
+    # $LastExitCode -eq 0
 
-        $String1 += $String2
+    # Get-Command $File -CommandType "Application" -ErrorAction "SilentlyContinue"
+
+    foreach ($EnvPath in ($Env:Path -split ";"))
+    {
+        if (Test-Path (Join-Path $EnvPath $FileSpec))
+        {
+            return $true
+        }
     }
 
-    $String1
-}
-
-#===================================================================================================
-
-function MkLink
-{
-    CMD.exe /c MKLINK $args
-}
-
-#===================================================================================================
-
-function Code
-{
-   CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
-}
-
-#===================================================================================================
-
-function Npm
-{
-   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
-}
-
-#===================================================================================================
-
-function Npx
-{
-   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
-}
-
-#===================================================================================================
-
-function Done
-{
-    SEND.exe WORKGROUP $([System.Environment]::MachineName) is done
+    $false
 }
 
 #===================================================================================================
@@ -173,43 +175,6 @@ function Get-Color
 
 #===================================================================================================
 
-function Search-Path([Parameter(Mandatory)] [string] $FileSpec)
-{
-    # WHERE.exe "$File"
-
-    foreach ($EnvPath in ($Env:Path -split ";"))
-    {
-        $FilePath = Join-Path $EnvPath $FileSpec
-
-        if (Test-Path $FilePath)
-        {
-            Get-ChildItem $FilePath -File | ForEach-Object { $_.FullName }
-        }
-    }
-}
-
-#===================================================================================================
-
-function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
-{
-    # WHERE.exe /q "$File"
-    # $LastExitCode -eq 0
-
-    # Get-Command $File -CommandType "Application" -ErrorAction "SilentlyContinue"
-
-    foreach ($EnvPath in ($Env:Path -split ";"))
-    {
-        if (Test-Path (Join-Path $EnvPath $FileSpec))
-        {
-            return $true
-        }
-    }
-
-    $false
-}
-
-#===================================================================================================
-
 function Out-Speak
 {
     [CmdletBinding()]
@@ -224,6 +189,48 @@ function Out-Speak
             $SpeechSynthesizer.Speak($Text)
         }
     }
+}
+
+#===================================================================================================
+
+function MkLink
+{
+    CMD.exe /c MKLINK $args
+}
+
+#===================================================================================================
+
+function Code
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
+}
+
+#===================================================================================================
+
+function GitHub
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
+}
+
+#===================================================================================================
+
+function Npm
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
+}
+
+#===================================================================================================
+
+function Npx
+{
+   CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
+}
+
+#===================================================================================================
+
+function Done
+{
+    SEND.exe WORKGROUP $([System.Environment]::MachineName) is done
 }
 
 #===================================================================================================
