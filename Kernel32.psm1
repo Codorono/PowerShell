@@ -27,7 +27,7 @@ function Out-Debug
 
 #===================================================================================================
 
-function Get-FileType([intptr] $Handle)
+function Get-FileType([System.IntPtr] $Handle)
 {
     [Win32.Kernel32]::GetFileType($Handle)
 }
@@ -176,7 +176,7 @@ function Get-MemoryInfo
 
     # query virtual memory
 
-    $Result = [Win32.Kernel32]::VirtualQueryEx($ProcessHandle, [System.IntPtr] 0, [ref] $MemoryBasicInformation,
+    $Result = [Win32.Kernel32]::VirtualQueryEx($ProcessHandle, [System.IntPtr]::Zero, [ref] $MemoryBasicInformation,
         [System.Runtime.InteropServices.Marshal]::SizeOf($MemoryBasicInformation))
 
     if ($Result -eq 0)

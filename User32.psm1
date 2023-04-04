@@ -248,12 +248,12 @@ public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg,
 public static extern bool MessageBeep(uint uType);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int MessageBoxW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] String lpText,
-    [MarshalAs(UnmanagedType.LPWStr)] String lpCaption, uint uType);
+public static extern int MessageBoxW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string lpText,
+    [MarshalAs(UnmanagedType.LPWStr)] string lpCaption, uint uType);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int MessageBoxTimeoutW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] String lpText,
-    [MarshalAs(UnmanagedType.LPWStr)] String lpCaption, uint uType, ushort wLanguageId, uint dwMilliseconds);
+public static extern int MessageBoxTimeoutW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string lpText,
+    [MarshalAs(UnmanagedType.LPWStr)] string lpCaption, uint uType, ushort wLanguageId, uint dwMilliseconds);
 "@
 
 Add-Type "User32" $MemberDefinition -Namespace "Win32"
