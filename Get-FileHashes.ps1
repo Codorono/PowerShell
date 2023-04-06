@@ -1,9 +1,29 @@
 ﻿#===================================================================================================
 
+[CmdletBinding(DefaultParameterSetName = "Path")]
 param
 (
+    [Parameter(Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
+    [SupportsWildCards()]
     [string[]] $Path,
+
+    [Parameter(Position = 1)]
+    [SupportsWildCards()]
+    [string] $Filter,
+
+    [Parameter(ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
+    [Alias("PSPath")]
+    [Alias("LP")]
+    [string[]] $LiteralPath,
+
+    [SupportsWildCards()]
+    [string[]] $Include,
+
+    [SupportsWildCards()]
+    [string[]] $Exclude,
+
     [switch] $Recurse,
+    [uint] $Depth,
     [switch] $Force
 )
 

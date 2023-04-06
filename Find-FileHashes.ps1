@@ -1,12 +1,32 @@
 ﻿#===================================================================================================
 
+[CmdletBinding(DefaultParameterSetName = "Path")]
 param
 (
-    [Parameter(Mandatory)]
+    [Parameter(Mandatory, Position = 0)]
     [string] $HashFile,
 
+    [Parameter(Position = 1, ParameterSetName = "Path")]
+    [SupportsWildCards()]
     [string[]] $Path,
+
+    [Parameter(Position = 2)]
+    [SupportsWildCards()]
+    [string] $Filter,
+
+    [Parameter(ParameterSetName = "LiteralPath")]
+    [Alias("PSPath")]
+    [Alias("LP")]
+    [string[]] $LiteralPath,
+
+    [SupportsWildCards()]
+    [string[]] $Include,
+
+    [SupportsWildCards()]
+    [string[]] $Exclude,
+
     [switch] $Recurse,
+    [uint] $Depth,
     [switch] $Force
 )
 
