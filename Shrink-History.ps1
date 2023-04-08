@@ -43,7 +43,7 @@ Get-Content $HistoryFilePath | ForEach-Object `
 
         # make sure command is complete
 
-        if (-not $Command.EndsWith('`'))
+        if (-not $Command.EndsWith("``"))
         {
             if ($IgnoreCase)
             {

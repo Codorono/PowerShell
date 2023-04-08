@@ -38,7 +38,7 @@ function prompt
 
     # set prompt
 
-    "{0}{1} " -f $CurrentPath, ('>' * ($NestedPromptLevel + 1))
+    "{0}{1} " -f $CurrentPath, (">" * ($NestedPromptLevel + 1))
 }
 
 #===================================================================================================

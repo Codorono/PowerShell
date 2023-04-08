@@ -187,7 +187,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
 
                 # make sure command is complete
 
-                if (-not $Command.EndsWith('`'))
+                if (-not $Command.EndsWith("``"))
                 {
                     # make sure command is valid
 
