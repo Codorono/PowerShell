@@ -231,8 +231,18 @@ function Npx
 
 #===================================================================================================
 
-function Done
+function Bf
 {
+    BEEP.exe
+    FORE.exe
+}
+
+#===================================================================================================
+
+function Bfs
+{
+    BEEP.exe
+    FORE.exe
     SEND.exe WORKGROUP $([System.Environment]::MachineName) is done
 }
 
