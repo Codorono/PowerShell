@@ -180,12 +180,15 @@ function Out-Speak
     [CmdletBinding()]
     param([Parameter(ValueFromPipeline, ValueFromRemainingArguments)] [string] $Text)
 
+    begin
+    {
+        $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+    }
+
     process
     {
         if ($Text.Length -ne 0)
         {
-            $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
-
             $SpeechSynthesizer.Speak($Text)
         }
     }
