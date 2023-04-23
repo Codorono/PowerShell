@@ -1,6 +1,6 @@
 ﻿#===================================================================================================
 
-param([Parameter(Mandatory)] [string] $FileSpec)
+param([Parameter(Mandatory)] [string] $Path)
 
 #===================================================================================================
 
@@ -12,10 +12,9 @@ $ModuleType = "invalid"
 
 # open file stream
 
-$FilePath = (Get-ChildItem $FileSpec).FullName
+$FilePath = (Get-Item $Path).FullName
 
-$FileStream = New-Object "System.IO.FileStream" -ArgumentList $FilePath,
-    ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read), ([System.IO.FileShare]::Read)
+$FileStream = [System.IO.File]::OpenRead($FilePath)
 
 try
 {
