@@ -18,19 +18,15 @@ Set-Variable "PropertyTagGpsLongitudeRef" 0x0003 -Option Constant
 Set-Variable "PropertyTagGpsLongitude" 0x0004 -Option Constant
 Set-Variable "PropertyTagGpsAltitudeRef" 0x0005 -Option Constant
 Set-Variable "PropertyTagGpsAltitude" 0x0006 -Option Constant
-
 Set-Variable "PropertyTagEquipMake" 0x010F -Option Constant
 Set-Variable "PropertyTagEquipModel" 0x0110 -Option Constant
-
 Set-Variable "PropertyTagSoftwareUsed" 0x0131 -Option Constant
 Set-Variable "PropertyTagDateTime" 0x0132 -Option Constant
-
 Set-Variable "PropertyTagExifDTOrig" 0x9003 -Option Constant
 Set-Variable "PropertyTagExifDTDigitized" 0x9004 -Option Constant
 Set-Variable "PropertyTagExifDTSubsec" 0x9290 -Option Constant
 Set-Variable "PropertyTagExifDTOrigSS" 0x9291 -Option Constant
 Set-Variable "PropertyTagExifDTDigSS" 0x9292 -Option Constant
-
 Set-Variable "PropertyTagExifPixXDim" 0xA002 -Option Constant
 Set-Variable "PropertyTagExifPixYDim" 0xA003 -Option Constant
 
@@ -174,7 +170,7 @@ if (($PropertyIdList.Contains($PropertyTagGpsAltitudeRef)) -and ($PropertyIdList
 
     $AltitudeNum = [System.BitConverter]::ToUInt32($Bytes, 0)
     $AltitudeDen = [System.BitConverter]::ToUInt32($Bytes, 4)
-    $Altitude = (($AltitudeNum / $AltitudeDen) * 1250) / 381
+    $Altitude = ($AltitudeNum * 1250) / ($AltitudeDen * 381)
 
     "GpsAltitude: {0}" -f $Altitude
 }
@@ -240,6 +236,22 @@ if ($PropertyIdList.Contains($PropertyTagDateTime))
 
     $DateTime = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
 
+    # get datetime subsecond
+
+    if ($PropertyIdList.Contains($PropertyTagExifDTSubsec))
+    {
+        $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTSubsec)
+
+        if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -eq 0))
+        {
+            throw "Bad DTSubsec"
+        }
+
+        $DTSubsec = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
+
+        $DateTime += "." + $DTSubsec
+    }
+
     "DateTime: {0}" -f $DateTime
 }
 
@@ -255,6 +267,22 @@ if ($PropertyIdList.Contains($PropertyTagExifDTOrig))
     }
 
     $DTOrig = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
+
+    # get datetime orig subsecond
+
+    if ($PropertyIdList.Contains($PropertyTagExifDTOrigSS))
+    {
+        $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTOrigSS)
+
+        if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -eq 0))
+        {
+            throw "Bad DTOrigSS"
+        }
+
+        $DTOrigSS = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
+
+        $DTOrig += "." + $DTOrigSS
+    }
 
     "DTOrig: {0}" -f $DTOrig
 }
@@ -272,55 +300,23 @@ if ($PropertyIdList.Contains($PropertyTagExifDTDigitized))
 
     $DTDigitized = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
 
+    # get datetime digitized subsecond
+
+    if ($PropertyIdList.Contains($PropertyTagExifDTDigSS))
+    {
+        $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTDigSS)
+
+        if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -eq 0))
+        {
+            throw "Bad DTDigSS"
+        }
+
+        $DTDigSS = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
+
+        $DTDigitized += "." + $DTDigSS
+    }
+
     "DTDigitized: {0}" -f $DTDigitized
-}
-
-# get datetime subsecond
-
-if ($PropertyIdList.Contains($PropertyTagExifDTSubsec))
-{
-    $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTSubsec)
-
-    if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -ne 4))
-    {
-        throw "Bad DTSubsec"
-    }
-
-    $DTSubsec = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
-
-    "DTSubsec: {0}" -f $DTSubsec
-}
-
-# get datetime orig subsecond
-
-if ($PropertyIdList.Contains($PropertyTagExifDTOrigSS))
-{
-    $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTOrigSS)
-
-    if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -eq 0))
-    {
-        throw "Bad DTOrigSS"
-    }
-
-    $DTOrigSS = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
-
-    "DTOrigSS: {0}" -f $DTOrigSS
-}
-
-# get datetime digitized subsecond
-
-if ($PropertyIdList.Contains($PropertyTagExifDTDigSS))
-{
-    $PropertyItem = $Image.GetPropertyItem($PropertyTagExifDTDigSS)
-
-    if (($PropertyItem.Type -ne 2) -or ($PropertyItem.Len -eq 0))
-    {
-        throw "Bad DTDigSS"
-    }
-
-    $DTDigSS = $ASCIIEncoding.GetString($PropertyItem.Value, 0, $PropertyItem.Len - 1)
-
-    "DTDigSS: {0}" -f $DTDigSS
 }
 
 # get pixel xy dim
