@@ -116,7 +116,7 @@ if (($MaxCommandCount -gt 0) -and ($NewCommandCount -gt $MaxCommandCount))
 
 # rewrite history file
 
-Set-Content $HistoryFilePath $CommandList -Encoding UTF8NoBOM
+Set-Content $HistoryFilePath $CommandList -Encoding utf8NoBOM
 
 # show statistics
 

@@ -42,7 +42,7 @@ function Set-LocationEx
 
     # add current location to location history file
 
-    Add-Content $HistoryFilePath $CurrentPath -Encoding UTF8NoBOM
+    Add-Content $HistoryFilePath $CurrentPath -Encoding utf8NoBOM
 }
 
 #===================================================================================================

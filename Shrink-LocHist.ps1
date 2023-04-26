@@ -83,7 +83,7 @@ if (($MaxLocationCount -gt 0) -and ($NewLocationCount -gt $MaxLocationCount))
 
 # rewrite location history file
 
-Set-Content $HistoryFilePath $LocationList -Encoding UTF8NoBOM
+Set-Content $HistoryFilePath $LocationList -Encoding utf8NoBOM
 
 # show statistics
 
