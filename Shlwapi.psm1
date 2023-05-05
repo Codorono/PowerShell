@@ -4,21 +4,29 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
+enum SFBS_FLAGS
+{
+    ROUND_TO_NEAREST_DISPLAYED_DIGIT = 0x0001
+    TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS = 0x0002
+}
+
+#===================================================================================================
+
 function Format-ByteSize([long] $Number, [switch] $Truncate)
 {
-    $Flags = $Truncate ? $SFBS_FLAGS_TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS : $SFBS_FLAGS_ROUND_TO_NEAREST_DISPLAYED_DIGIT
+    $Flags = [SFBS_FLAGS]::ROUND_TO_NEAREST_DISPLAYED_DIGIT
 
-    $StringBuilder = New-Object "System.Text.StringBuilder" -ArgumentList 16
+    if ($Truncate)
+    {
+        $Flags = [SFBS_FLAGS]::TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS
+    }
+
+    $StringBuilder = [System.Text.StringBuilder]::new(16)
 
     [Win32.Shlwapi]::StrFormatByteSizeEx($Number, $Flags, $StringBuilder, $StringBuilder.Capacity)
 
     $StringBuilder.ToString()
 }
-
-#===================================================================================================
-
-Set-Variable "SFBS_FLAGS_ROUND_TO_NEAREST_DISPLAYED_DIGIT" 0x0001 -Option Constant
-Set-Variable "SFBS_FLAGS_TRUNCATE_UNDISPLAYED_DECIMAL_DIGITS" 0x0002 -Option Constant
 
 #===================================================================================================
 

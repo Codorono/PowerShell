@@ -3,7 +3,7 @@
 param
 (
     [string] $Path,
-    [switch] $Bing
+    [switch] $Map
 )
 
 #===================================================================================================
@@ -344,13 +344,13 @@ if (($PropertyIdList.Contains($PropertyTagExifPixXDim)) -and ($PropertyIdList.Co
     "PixDim: {0} x {1}" -f $PixXDim, $PixYDim
 }
 
-# open bing maps
+# open map
 
-if (($Bing) -and ($Latitude -ne $null) -and ($Longitude -ne $null))
+if (($Map) -and ($Latitude -ne $null) -and ($Longitude -ne $null))
 {
-    $BingMapsUrl = "https://www.bing.com/maps/default.aspx?v=2&q={0},{1}" -f $Latitude, $Longitude
+    $MapsUrl = "https://www.bing.com/maps/default.aspx?v=2&q={0},{1}" -f $Latitude, $Longitude
 
-    Start-Process $BingMapsUrl
+    Start-Process $MapsUrl
 }
 
 # dispose
