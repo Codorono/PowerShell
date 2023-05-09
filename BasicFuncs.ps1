@@ -231,7 +231,7 @@ function Npx
 
 #===================================================================================================
 
-function Bf
+function BeepForeground
 {
     BEEP.exe
     FORE.exe
@@ -239,7 +239,7 @@ function Bf
 
 #===================================================================================================
 
-function Bfs
+function BeepForegroundSend
 {
     BEEP.exe
     FORE.exe
