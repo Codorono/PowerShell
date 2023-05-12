@@ -24,7 +24,7 @@ Get-ChildItem $Path -Attributes !Offline -File | ForEach-Object `
     {
         # get binary stream reader
 
-        $BinaryReader = New-Object "System.IO.BinaryReader" -ArgumentList $FileStream
+        $BinaryReader = [System.IO.BinaryReader]::new($FileStream)
 
         try
         {

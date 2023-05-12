@@ -188,7 +188,7 @@ function Show-MessageBox
 
     if ($Result -eq 0)
     {
-        throw (New-Object "System.ComponentModel.Win32Exception")
+        throw ([System.ComponentModel.Win32Exception]::new())
     }
 
     $Result

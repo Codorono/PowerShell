@@ -23,7 +23,7 @@ Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
     {
         # list of locations
 
-        $LocationList = New-Object "System.Collections.Generic.List[string]"
+        $LocationList = [System.Collections.Generic.List[string]]::new()
 
         # iterate through lines of location history file
 
@@ -95,7 +95,7 @@ Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
 
     # list of commands
 
-    $CommandList = New-Object "System.Collections.Generic.List[string]"
+    $CommandList = [System.Collections.Generic.List[string]]::new()
 
     # iterate through history items
 
@@ -167,7 +167,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
     {
         # list of commands
 
-        $CommandList = New-Object "System.Collections.Generic.List[string]"
+        $CommandList = [System.Collections.Generic.List[string]]::new()
 
         # iterate through lines of history file
 

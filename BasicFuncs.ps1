@@ -182,7 +182,7 @@ function Out-Speak
 
     begin
     {
-        $SpeechSynthesizer = New-Object "System.Speech.Synthesis.SpeechSynthesizer"
+        $SpeechSynthesizer = [System.Speech.Synthesis.SpeechSynthesizer]::new()
     }
 
     process
