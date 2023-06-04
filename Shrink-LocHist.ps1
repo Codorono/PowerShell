@@ -35,7 +35,7 @@ Get-Content $HistoryFilePath | ForEach-Object `
 
         # make sure location exists
 
-        if (-not (Test-Path $Location))
+        if (-not (Test-Path -LiteralPath $Location))
         {
             if ($Verbose)
             {
