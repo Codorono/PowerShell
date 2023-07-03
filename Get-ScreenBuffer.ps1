@@ -13,26 +13,30 @@ $Rectangle = [System.Management.Automation.Host.Rectangle]::new(0, 0, $Width, $H
 
 # get screen buffer contents
 
-$Screen = $Host.UI.RawUI.GetBufferContents($Rectangle)
+$ScreenBuffer = $Host.UI.RawUI.GetBufferContents($Rectangle)
+
+# get line chars buffer
+
+$LineChars = [System.Text.StringBuilder]::new($Width)
 
 # iterate through screen buffer lines
 
-$Line = [System.Text.StringBuilder]::new($Width)
-
 for ($Row = 0; $Row -lt $Height; $Row++)
 {
-    # concatenate line chars
+    # empty line chars buffer
 
-    [void] $Line.Clear()
+    [void] $LineChars.Clear()
+
+    # concatenate line chars
 
     for ($Col = 0; $Col -lt $Width; $Col++)
     {
-        [void] $Line.Append(($Screen[$Row, $Col]).Character)
+        [void] $LineChars.Append(($ScreenBuffer[$Row, $Col]).Character)
     }
 
     # output line
 
-    Write-Output $Line.ToString().TrimEnd()
+    Write-Output $LineChars.ToString().TrimEnd()
 }
 
 #===================================================================================================
