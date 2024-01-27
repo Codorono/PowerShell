@@ -17,7 +17,7 @@ $ScreenBuffer = $Host.UI.RawUI.GetBufferContents($Rectangle)
 
 # get line chars buffer
 
-$LineChars = [System.Text.StringBuilder]::new($Width)
+$StringBuilder = [System.Text.StringBuilder]::new($Width)
 
 # iterate through screen buffer lines
 
@@ -25,18 +25,18 @@ for ($Row = 0; $Row -lt $Height; $Row++)
 {
     # empty line chars buffer
 
-    [void] $LineChars.Clear()
+    [void] $StringBuilder.Clear()
 
     # concatenate line chars
 
     for ($Col = 0; $Col -lt $Width; $Col++)
     {
-        [void] $LineChars.Append(($ScreenBuffer[$Row, $Col]).Character)
+        [void] $StringBuilder.Append(($ScreenBuffer[$Row, $Col]).Character)
     }
 
     # output line
 
-    Write-Output $LineChars.ToString().TrimEnd()
+    Write-Output $StringBuilder.ToString().TrimEnd()
 }
 
 #===================================================================================================

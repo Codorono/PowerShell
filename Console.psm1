@@ -141,29 +141,25 @@ function Clear-Screen
         throw ([System.ComponentModel.Win32Exception]::new())
     }
 
-    # get fill size
+    # fill screen buffer with spaces
 
     $FillSize = $ConsoleScreenBufferInfo.dwSize.X * $ConsoleScreenBufferInfo.dwCursorPosition.Y
-
-    # get top left coord
 
     $Coord = [Win32.Console+COORD]::new()
 
     $Coord.X = 0
     $Coord.Y = 0
 
-    # fill screen buffer with spaces
+    $FillResult = 0
 
-    $FillCount = 0
-
-    if ([Win32.Console]::FillConsoleOutputCharacterW($Screen, [char] " ", $FillSize, $Coord, [ref] $FillCount) -eq 0)
+    if ([Win32.Console]::FillConsoleOutputCharacterW($Screen, [char] " ", $FillSize, $Coord, [ref] $FillResult) -eq 0)
     {
         throw ([System.ComponentModel.Win32Exception]::new())
     }
 
     # fill screen buffer attributes
 
-    if ([Win32.Console]::FillConsoleOutputAttribute($Screen, $ConsoleScreenBufferInfo.wAttributes, $FillSize, $Coord, [ref] $FillCount) -eq 0)
+    if ([Win32.Console]::FillConsoleOutputAttribute($Screen, $ConsoleScreenBufferInfo.wAttributes, $FillSize, $Coord, [ref] $FillResult) -eq 0)
     {
         throw ([System.ComponentModel.Win32Exception]::new())
     }
@@ -270,7 +266,9 @@ function Set-ConsoleBackgroundColor
 
     # set console background color
 
-    $ConsoleScreenBufferInfo.ColorTable[0] = [System.Drawing.ColorTranslator]::ToWin32($Color)
+    $BackgroundColor = ($ConsoleScreenBufferInfo.wAttributes -band 0x00F0) -shr 4
+
+    $ConsoleScreenBufferInfo.ColorTable[$BackgroundColor] = [System.Drawing.ColorTranslator]::ToWin32($Color)
 
     # compensate for windows bug
 
@@ -284,6 +282,22 @@ function Set-ConsoleBackgroundColor
     # set console screen buffer info
 
     if ([Win32.Console]::SetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
+    {
+        throw ([System.ComponentModel.Win32Exception]::new())
+    }
+
+    # fill console attributes
+
+    $FillSize = $ConsoleScreenBufferInfo.dwSize.X * $ConsoleScreenBufferInfo.dwSize.Y
+
+    $Coord = [Win32.Console+COORD]::new()
+
+    $Coord.X = 0
+    $Coord.Y = 0
+
+    $FillResult = 0
+
+    if ([Win32.Console]::FillConsoleOutputAttribute($Screen, $ConsoleScreenBufferInfo.wAttributes, $FillSize, $Coord, [ref] $FillResult) -eq 0)
     {
         throw ([System.ComponentModel.Win32Exception]::new())
     }
@@ -453,6 +467,22 @@ function Set-ConsoleColorScheme([string] $Scheme)
     # set console screen buffer info
 
     if ([Win32.Console]::SetConsoleScreenBufferInfoEx($Screen, [ref] $ConsoleScreenBufferInfo) -eq 0)
+    {
+        throw ([System.ComponentModel.Win32Exception]::new())
+    }
+
+    # fill console attributes
+
+    $FillSize = $ConsoleScreenBufferInfo.dwSize.X * $ConsoleScreenBufferInfo.dwSize.Y
+
+    $Coord = [Win32.Console+COORD]::new()
+
+    $Coord.X = 0
+    $Coord.Y = 0
+
+    $FillResult = 0
+
+    if ([Win32.Console]::FillConsoleOutputAttribute($Screen, $Attributes, $FillSize, $Coord, [ref] $FillResult) -eq 0)
     {
         throw ([System.ComponentModel.Win32Exception]::new())
     }
