@@ -85,6 +85,13 @@ function Test-Administrator
 
 #===================================================================================================
 
+function Test-RegistryValue([string] $RegKey, [string] $Value)
+{
+    ((Test-Path $RegKey) -and ((Get-ItemProperty -Path $RegKey -Name $Value -ErrorAction Ignore) -ne $null))
+}
+
+#===================================================================================================
+
 function Test-VirtualPC
 {
     $Baseboard = Get-CimInstance -Namespace "root\CIMV2" -ClassName "Win32_Baseboard"
@@ -127,6 +134,52 @@ function Test-SearchPath([Parameter(Mandatory)] [string] $FileSpec)
     }
 
     $false
+}
+
+#===================================================================================================
+
+function Clear-Screen2
+{
+    $RawUI = $Host.UI.RawUI
+
+    # get cursor position
+
+    $CursorPosition = $RawUI.CursorPosition
+
+    # get screen buffer rectangle
+
+    $Width = $RawUI.BufferSize.Width
+    $Height = $CursorPosition.Y
+
+    $Rectangle = [System.Management.Automation.Host.Rectangle]::new(0, 0, $Width, $Height)
+
+    # get buffer cell
+
+    $BufferCell = [System.Management.Automation.Host.BufferCell]::new(' ', $RawUI.ForegroundColor, $RawUI.BackgroundColor, 0)
+
+    # set screen buffer contents
+
+    $Host.UI.RawUI.SetBufferContents($Rectangle, $BufferCell)
+
+    # move cursor to top left
+
+    $CursorPosition.X = 0
+    $CursorPosition.Y = 0
+
+    $RawUI.CursorPosition = $CursorPosition
+}
+
+#===================================================================================================
+
+function Clear-Screen3
+{
+    $RawUI = $Host.UI.RawUI
+
+    $RawUI.CursorPosition = @{X = 0; Y = 0}
+
+    $RawUI.SetBufferContents(
+        @{Top = -1; Bottom = -1; Right = -1; Left = -1},
+        @{Character = ' '; ForegroundColor = $RawUI.ForegroundColor; BackgroundColor = $RawUI.BackgroundColor; BufferCellType = 0})
 }
 
 #===================================================================================================
