@@ -4,16 +4,16 @@ Set-StrictMode -Version Latest
 
 #===================================================================================================
 
-# get screen buffer rectangle
+$RawUI = $Host.UI.RawUI
 
-$Width = $Host.UI.RawUI.BufferSize.Width
-$Height = $Host.UI.RawUI.CursorPosition.Y
+# get screen buffer size
 
-$Rectangle = [System.Management.Automation.Host.Rectangle]::new(0, 0, $Width, $Height)
+$Width = $RawUI.BufferSize.Width
+$Height = $RawUI.CursorPosition.Y
 
 # get screen buffer contents
 
-$ScreenBuffer = $Host.UI.RawUI.GetBufferContents($Rectangle)
+$ScreenBuffer = $RawUI.GetBufferContents(@{Left = 0; Top = 0; Right = $Width; Bottom = $Height})
 
 # get line chars buffer
 
