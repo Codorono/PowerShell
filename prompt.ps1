@@ -26,7 +26,7 @@ function prompt
 
 	if (Test-Path "Variable:ConsoleTitle")
 	{
-		$WindowTitle += " -- $ConsoleTitle"
+		$WindowTitle += " -- " + $ConsoleTitle
 	}
 
 	if (Test-Administrator)
