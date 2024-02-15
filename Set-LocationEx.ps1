@@ -1,52 +1,52 @@
-﻿#===================================================================================================
+﻿#=======================================================================================================================
 
 Set-StrictMode -Version Latest
 
-#===================================================================================================
+#=======================================================================================================================
 
 function Set-LocationEx
 {
-    [CmdletBinding(DefaultParameterSetName = "Path")]
-    param
-    (
-        [Parameter(Mandatory, Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
-        [string] $Path,
+	[CmdletBinding(DefaultParameterSetName = "Path")]
+	param
+	(
+		[Parameter(Mandatory, Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[string] $Path,
 
-        [Parameter(Mandatory, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
-        [Alias("PSPath")]
-        [Alias("LP")]
-        [string] $LiteralPath,
+		[Parameter(Mandatory, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
+		[Alias("PSPath")]
+		[Alias("LP")]
+		[string] $LiteralPath,
 
-        [switch] $PassThru
-    )
+		[switch] $PassThru
+	)
 
-    # set location
+	# set location
 
-    Set-Location @PSBoundParameters
+	Set-Location @PSBoundParameters
 
-    # make sure location history file exists
+	# make sure location history file exists
 
-    $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
-    $HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
+	$HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
+	$HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
-    if (-not (Test-Path $HistoryFilePath))
-    {
-        New-Item $HistoryFilePath | Out-Null
-    }
+	if (-not (Test-Path $HistoryFilePath))
+	{
+		New-Item $HistoryFilePath | Out-Null
+	}
 
-    # get current location
+	# get current location
 
-    $PathInfo = $ExecutionContext.SessionState.Path.CurrentLocation
+	$PathInfo = $ExecutionContext.SessionState.Path.CurrentLocation
 
-    $CurrentPath = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
+	$CurrentPath = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
 
-    # add current location to location history file
+	# add current location to location history file
 
-    Add-Content $HistoryFilePath $CurrentPath -Encoding utf8NoBOM
+	Add-Content $HistoryFilePath $CurrentPath -Encoding utf8NoBOM
 }
 
-#===================================================================================================
+#=======================================================================================================================
 
 Set-Alias "cd" "Set-LocationEx" -Option AllScope
 
-#===================================================================================================
+#=======================================================================================================================

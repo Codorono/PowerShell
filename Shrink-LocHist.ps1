@@ -1,16 +1,16 @@
-﻿#===================================================================================================
+﻿#=======================================================================================================================
 
 param
 (
-    [int] $MaxLocationCount = 0,
-    [switch] $Verbose
+	[int] $MaxLocationCount = 0,
+	[switch] $Verbose
 )
 
-#===================================================================================================
+#=======================================================================================================================
 
 Set-StrictMode -Version Latest
 
-#===================================================================================================
+#=======================================================================================================================
 
 # list of locations
 
@@ -27,47 +27,47 @@ $OldLocationCount = 0
 
 Get-Content $HistoryFilePath | ForEach-Object `
 {
-    # skip blank lines
+	# skip blank lines
 
-    if ($_.Length -ne 0)
-    {
-        $Location = $_
+	if ($_.Length -ne 0)
+	{
+		$Location = $_
 
-        # make sure location exists
+		# make sure location exists
 
-        if (-not (Test-Path -LiteralPath $Location))
-        {
-            if ($Verbose)
-            {
-                Write-Host "Deleted $Location" -ForegroundColor Red
-            }
-        }
+		if (-not (Test-Path -LiteralPath $Location))
+		{
+			if ($Verbose)
+			{
+				Write-Host "Deleted $Location" -ForegroundColor Red
+			}
+		}
 
-        else
-        {
-            # look for location in list
+		else
+		{
+			# look for location in list
 
-            $Index = $LocationList.IndexOf($Location)
+			$Index = $LocationList.IndexOf($Location)
 
-            if ($Index -ne -1)
-            {
-                # remove previous location from list
+			if ($Index -ne -1)
+			{
+				# remove previous location from list
 
-                $LocationList.RemoveAt($Index)
+				$LocationList.RemoveAt($Index)
 
-                if ($Verbose)
-                {
-                    Write-Host "Removed $Location" -ForegroundColor Yellow
-                }
-            }
+				if ($Verbose)
+				{
+					Write-Host "Removed $Location" -ForegroundColor Yellow
+				}
+			}
 
-            # add location to end of list
+			# add location to end of list
 
-            $LocationList.Add($Location)
-        }
+			$LocationList.Add($Location)
+		}
 
-        $OldLocationCount += 1
-    }
+		$OldLocationCount += 1
+	}
 }
 
 # purge excess locations
@@ -76,9 +76,9 @@ $NewLocationCount = $LocationList.Count
 
 if (($MaxLocationCount -gt 0) -and ($NewLocationCount -gt $MaxLocationCount))
 {
-    $LocationList.RemoveRange(0, $NewLocationCount - $MaxLocationCount)
+	$LocationList.RemoveRange(0, $NewLocationCount - $MaxLocationCount)
 
-    $NewLocationCount = $LocationList.Count
+	$NewLocationCount = $LocationList.Count
 }
 
 # rewrite location history file
@@ -90,6 +90,6 @@ Set-Content $HistoryFilePath $LocationList -Encoding utf8NoBOM
 $DifLocationCount = $OldLocationCount - $NewLocationCount
 
 Write-Host ("{0} duplicate location{1} removed, {2} location{3} retained" -f $DifLocationCount, (Get-Plural $DifLocationCount),
-    $NewLocationCount, (Get-Plural $NewLocationCount)) -ForegroundColor Cyan
+	$NewLocationCount, (Get-Plural $NewLocationCount)) -ForegroundColor Cyan
 
-#===================================================================================================
+#=======================================================================================================================

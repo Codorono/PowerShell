@@ -1,241 +1,241 @@
-﻿#===================================================================================================
+﻿#=======================================================================================================================
 
 Set-StrictMode -Version Latest
 
-#===================================================================================================
+#=======================================================================================================================
 
 # Set F6 for location history
 
 Set-PSReadlineKeyHandler -Chord "F6" -ScriptBlock `
 {
-    # get match string from command prompt
+	# get match string from command prompt
 
-    $Match = $null
+	$Match = $null
 
-    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
+	[Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
 
-    # get location history file path
+	# get location history file path
 
-    $HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
-    $HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
+	$HistoryFolder = [System.IO.Path]::GetDirectoryName((Get-PSReadlineOption).HistorySavePath)
+	$HistoryFilePath = Join-Path $HistoryFolder "ConsoleHost_lochist.txt"
 
-    if (Test-Path $HistoryFilePath)
-    {
-        # list of locations
+	if (Test-Path $HistoryFilePath)
+	{
+		# list of locations
 
-        $LocationList = [System.Collections.Generic.List[string]]::new()
+		$LocationList = [System.Collections.Generic.List[string]]::new()
 
-        # iterate through lines of location history file
+		# iterate through lines of location history file
 
-        Get-Content $HistoryFilePath | ForEach-Object `
-        {
-            # skip blank lines
+		Get-Content $HistoryFilePath | ForEach-Object `
+		{
+			# skip blank lines
 
-            if ($_.Length -ne 0)
-            {
-                $Location = $_
+			if ($_.Length -ne 0)
+			{
+				$Location = $_
 
-                # make sure location is valid
+				# make sure location is valid
 
-                if (($Match.Length -eq 0) -or ($Location -like "*$Match*"))
-                {
-                    # remove duplicate location from list
+				if (($Match.Length -eq 0) -or ($Location -like "*$Match*"))
+				{
+					# remove duplicate location from list
 
-                    $Index = $LocationList.IndexOf($Location)
+					$Index = $LocationList.IndexOf($Location)
 
-                    if ($Index -ne -1)
-                    {
-                        $LocationList.RemoveAt($Index)
-                    }
+					if ($Index -ne -1)
+					{
+						$LocationList.RemoveAt($Index)
+					}
 
-                    # add location to end of list
+					# add location to end of list
 
-                    $LocationList.Add($Location)
-                }
-            }
-        }
+					$LocationList.Add($Location)
+				}
+			}
+		}
 
-        if ($LocationList.Count -eq 0)
-        {
-            [Microsoft.PowerShell.PSConsoleReadLine]::Ding()
-        }
+		if ($LocationList.Count -eq 0)
+		{
+			[Microsoft.PowerShell.PSConsoleReadLine]::Ding()
+		}
 
-        else
-        {
-            # put most recent locations at top of list
+		else
+		{
+			# put most recent locations at top of list
 
-            $LocationList.Reverse()
+			$LocationList.Reverse()
 
-            # display location history in gridview
+			# display location history in gridview
 
-            $Location = $LocationList | Out-GridView -Title "Locations" -OutputMode Single
+			$Location = $LocationList | Out-GridView -Title "Locations" -OutputMode Single
 
-            if ($Location -ne $null)
-            {
-                Set-LocationEx -LiteralPath $Location
+			if ($Location -ne $null)
+			{
+				Set-LocationEx -LiteralPath $Location
 
-                [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-                [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
-            }
-        }
-    }
+				[Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+				[Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
+			}
+		}
+	}
 }
 
-#===================================================================================================
+#=======================================================================================================================
 
 # Set F7 for recent command history
 
 Set-PSReadLineKeyHandler -Chord "F7" -ScriptBlock `
 {
-    # get match string from command prompt
+	# get match string from command prompt
 
-    $Match = $null
+	$Match = $null
 
-    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
+	[Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
 
-    # list of commands
+	# list of commands
 
-    $CommandList = [System.Collections.Generic.List[string]]::new()
+	$CommandList = [System.Collections.Generic.List[string]]::new()
 
-    # iterate through history items
+	# iterate through history items
 
-    [Microsoft.PowerShell.PSConsoleReadLine]::GetHistoryItems() | ForEach-Object `
-    {
-        # get command
+	[Microsoft.PowerShell.PSConsoleReadLine]::GetHistoryItems() | ForEach-Object `
+	{
+		# get command
 
-        $Command = $_.CommandLine
+		$Command = $_.CommandLine
 
-        # make sure command is valid
+		# make sure command is valid
 
-        if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
-        {
-            # remove duplicate command from list
+		if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
+		{
+			# remove duplicate command from list
 
-            $Index = $CommandList.IndexOf($Command)
+			$Index = $CommandList.IndexOf($Command)
 
-            if ($Index -ne -1)
-            {
-                $CommandList.RemoveAt($Index)
-            }
+			if ($Index -ne -1)
+			{
+				$CommandList.RemoveAt($Index)
+			}
 
-            # add command to end of list
+			# add command to end of list
 
-            $CommandList.Add($Command)
-        }
-    }
+			$CommandList.Add($Command)
+		}
+	}
 
-    if ($CommandList.Count -eq 0)
-    {
-        [Microsoft.PowerShell.PSConsoleReadLine]::Ding()
-    }
+	if ($CommandList.Count -eq 0)
+	{
+		[Microsoft.PowerShell.PSConsoleReadLine]::Ding()
+	}
 
-    else
-    {
-        # put most recent commands at top of list
+	else
+	{
+		# put most recent commands at top of list
 
-        $CommandList.Reverse()
+		$CommandList.Reverse()
 
-        # display command history in gridview
+		# display command history in gridview
 
-        $Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
+		$Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
 
-        if ($Command -ne $null)
-        {
-            [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-            [Microsoft.PowerShell.PSConsoleReadLine]::Insert($Command)
-        }
-    }
+		if ($Command -ne $null)
+		{
+			[Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+			[Microsoft.PowerShell.PSConsoleReadLine]::Insert($Command)
+		}
+	}
 }
 
-#===================================================================================================
+#=======================================================================================================================
 
 # Set Ctrl-F7 for complete command history
 
 Set-PSReadLineKeyHandler -Chord "Ctrl+F7" -ScriptBlock `
 {
-    # get match string from command prompt
+	# get match string from command prompt
 
-    $Match = $null
+	$Match = $null
 
-    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
+	[Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref] $Match, [ref] $null)
 
-    # get command history file path
+	# get command history file path
 
-    $HistoryFilePath = (Get-PSReadlineOption).HistorySavePath
+	$HistoryFilePath = (Get-PSReadlineOption).HistorySavePath
 
-    if (Test-Path $HistoryFilePath)
-    {
-        # list of commands
+	if (Test-Path $HistoryFilePath)
+	{
+		# list of commands
 
-        $CommandList = [System.Collections.Generic.List[string]]::new()
+		$CommandList = [System.Collections.Generic.List[string]]::new()
 
-        # iterate through lines of history file
+		# iterate through lines of history file
 
-        $Command = ""
+		$Command = ""
 
-        Get-Content $HistoryFilePath | ForEach-Object `
-        {
-            # skip blank lines
+		Get-Content $HistoryFilePath | ForEach-Object `
+		{
+			# skip blank lines
 
-            if ($_.Length -ne 0)
-            {
-                # deal with multi-line commands
+			if ($_.Length -ne 0)
+			{
+				# deal with multi-line commands
 
-                if ($Command.Length -ne 0) { $Command += "`n" }
+				if ($Command.Length -ne 0) { $Command += "`n" }
 
-                $Command += $_
+				$Command += $_
 
-                # make sure command is complete
+				# make sure command is complete
 
-                if (-not $Command.EndsWith("``"))
-                {
-                    # make sure command is valid
+				if (-not $Command.EndsWith("``"))
+				{
+					# make sure command is valid
 
-                    if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
-                    {
-                        # remove duplicate command from list
+					if (($Match.Length -eq 0) -or ($Command -like "*$Match*"))
+					{
+						# remove duplicate command from list
 
-                        $Index = $CommandList.IndexOf($Command)
+						$Index = $CommandList.IndexOf($Command)
 
-                        if ($Index -ne -1)
-                        {
-                            $CommandList.RemoveAt($Index)
-                        }
+						if ($Index -ne -1)
+						{
+							$CommandList.RemoveAt($Index)
+						}
 
-                        # add command to end of list
+						# add command to end of list
 
-                        $CommandList.Add($Command)
-                    }
+						$CommandList.Add($Command)
+					}
 
-                    # start new command
+					# start new command
 
-                    $Command = ""
-                }
-            }
-        }
+					$Command = ""
+				}
+			}
+		}
 
-        if ($CommandList.Count -eq 0)
-        {
-            [Microsoft.PowerShell.PSConsoleReadLine]::Ding()
-        }
+		if ($CommandList.Count -eq 0)
+		{
+			[Microsoft.PowerShell.PSConsoleReadLine]::Ding()
+		}
 
-        else
-        {
-            # put most recent commands at top of list
+		else
+		{
+			# put most recent commands at top of list
 
-            $CommandList.Reverse()
+			$CommandList.Reverse()
 
-            # display command history in gridview
+			# display command history in gridview
 
-            $Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
+			$Command = $CommandList | Out-GridView -Title "Commands" -OutputMode Single
 
-            if ($Command -ne $null)
-            {
-                [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-                [Microsoft.PowerShell.PSConsoleReadLine]::Insert($Command)
-            }
-        }
-    }
+			if ($Command -ne $null)
+			{
+				[Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+				[Microsoft.PowerShell.PSConsoleReadLine]::Insert($Command)
+			}
+		}
+	}
 }
 
-#===================================================================================================
+#=======================================================================================================================

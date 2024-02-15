@@ -1,15 +1,15 @@
-﻿#===================================================================================================
+﻿#=======================================================================================================================
 
 Set-StrictMode -Version Latest
 
-#===================================================================================================
+#=======================================================================================================================
 
 function Extract-EscSeq($EscSeq)
 {
-    $EscSeq.Substring(2, $EscSeq.Length - 3)
+	$EscSeq.Substring(2, $EscSeq.Length - 3)
 }
 
-#===================================================================================================
+#=======================================================================================================================
 
 $ForegroundCodes = 30, 34, 32, 36, 31, 35, 33, 37, 90, 94, 92, 96, 91, 95, 93, 97
 $BackgroundCodes = 40, 44, 42, 46, 41, 45, 43, 47, 100, 104, 102, 106, 101, 105, 103, 107
@@ -23,16 +23,16 @@ Write-Host "Color Table"
 
 foreach ($ForegroundCode in $ForegroundCodes)
 {
-    $Line = " "
+	$Line = " "
 
-    foreach ($BackgroundCode in $BackgroundCodes)
-    {
-        $Line += "`e[{0};{1}m {0};{1} " -f $ForegroundCode, $BackgroundCode
-    }
+	foreach ($BackgroundCode in $BackgroundCodes)
+	{
+		$Line += "`e[{0};{1}m {0};{1} " -f $ForegroundCode, $BackgroundCode
+	}
 
-    $Line += $DefaultEscSeq
+	$Line += $DefaultEscSeq
 
-    Write-Host $Line
+	Write-Host $Line
 }
 
 Write-Host "PowerShell Colors"
@@ -123,4 +123,4 @@ Write-Host ("`e[{0}m  TypeColor                   - {0}{1}" -f $TypeEscSeq, $Def
 $VariableEscSeq = Extract-EscSeq $PSConsoleReadLineOptions.VariableColor
 Write-Host ("`e[{0}m  VariableColor               - {0}{1}" -f $VariableEscSeq, $DefaultEscSeq)
 
-#===================================================================================================
+#=======================================================================================================================

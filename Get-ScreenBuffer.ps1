@@ -1,8 +1,8 @@
-﻿#===================================================================================================
+﻿#=======================================================================================================================
 
 Set-StrictMode -Version Latest
 
-#===================================================================================================
+#=======================================================================================================================
 
 $RawUI = $Host.UI.RawUI
 
@@ -23,20 +23,20 @@ $StringBuilder = [System.Text.StringBuilder]::new($Width)
 
 for ($Row = 0; $Row -lt $Height; $Row++)
 {
-    # empty line chars buffer
+	# empty line chars buffer
 
-    [void] $StringBuilder.Clear()
+	[void] $StringBuilder.Clear()
 
-    # concatenate line chars
+	# concatenate line chars
 
-    for ($Col = 0; $Col -lt $Width; $Col++)
-    {
-        [void] $StringBuilder.Append(($ScreenBuffer[$Row, $Col]).Character)
-    }
+	for ($Col = 0; $Col -lt $Width; $Col++)
+	{
+		[void] $StringBuilder.Append(($ScreenBuffer[$Row, $Col]).Character)
+	}
 
-    # output line
+	# output line
 
-    Write-Output $StringBuilder.ToString().TrimEnd()
+	Write-Output $StringBuilder.ToString().TrimEnd()
 }
 
-#===================================================================================================
+#=======================================================================================================================

@@ -247,28 +247,28 @@ function MkLink
 
 function Code
 {
-    CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
+	CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
 }
 
 #=======================================================================================================================
 
 function GitHub
 {
-    CMD.exe /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
+	CMD.exe /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
 }
 
 #=======================================================================================================================
 
 function Npm
 {
-    CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
+	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
 }
 
 #=======================================================================================================================
 
 function Npx
 {
-    CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
+	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
 }
 
 #=======================================================================================================================
