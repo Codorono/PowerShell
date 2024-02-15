@@ -24,9 +24,9 @@ function prompt
 	$WindowTitle = "{0} -- PowerShell {1}.{2}.{3} ({4})" -f $CurrentPath, $PSVersion.Major,
 		$PSVersion.Minor, $PSVersion.Patch, ((Test-64BitProcess) ? "x64" : "x86")
 
-	if (Test-Path Variable:ConsoleTitle)
+	if (Test-Path "Variable:ConsoleTitle")
 	{
-		$WindowTitle = $WindowTitle + " -- " + $ConsoleTitle
+		$WindowTitle += " -- $ConsoleTitle"
 	}
 
 	if (Test-Administrator)
