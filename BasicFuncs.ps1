@@ -147,15 +147,15 @@ function Clear-Screen2
 	$Width = $RawUI.BufferSize.Width
 	$Height = $RawUI.CursorPosition.Y
 
-	# move cursor to top left
-
-	$RawUI.CursorPosition = @{X = 0; Y = 0}
-
 	# set screen buffer contents
 
 	$RawUI.SetBufferContents(
 		@{Left = 0; Top = 0; Right = $Width; Bottom = $Height},
 		@{Character = ' '; ForegroundColor = $RawUI.ForegroundColor; BackgroundColor = $RawUI.BackgroundColor; BufferCellType = 0})
+
+	# move cursor to top left
+
+	$RawUI.CursorPosition = @{X = 0; Y = 0}
 }
 
 #=======================================================================================================================
