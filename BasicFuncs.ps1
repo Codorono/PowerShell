@@ -54,7 +54,7 @@ function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
 
 function Get-OSVersion
 {
-	# Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00
+	# Vista=0x0600, Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00
 
 	$OSVersion = [System.Environment]::OSVersion.Version
 
@@ -87,7 +87,7 @@ function Test-Administrator
 
 function Test-RegistryValue([string] $RegKey, [string] $Value)
 {
-	((Test-Path $RegKey) -and ((Get-ItemProperty -Path $RegKey -Name $Value -ErrorAction Ignore) -ne $null))
+	((Test-Path $RegKey) -and ((Get-ItemProperty -Path $RegKey -Name $Value -ErrorAction "Ignore") -ne $null))
 }
 
 #=======================================================================================================================
