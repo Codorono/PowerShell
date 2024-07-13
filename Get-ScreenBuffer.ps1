@@ -23,20 +23,29 @@ $StringBuilder = [System.Text.StringBuilder]::new($Width)
 
 for ($Row = 0; $Row -lt $Height; $Row++)
 {
+	# get length of line
+
+	$Length = $Width
+
+	while (($Length -gt 0) -and ($ScreenBuffer[$Row, ($Length - 1)].Character -eq " "))
+	{
+		$Length--
+	}
+
 	# empty line chars buffer
 
 	[void] $StringBuilder.Clear()
 
 	# concatenate line chars
 
-	for ($Col = 0; $Col -lt $Width; $Col++)
+	for ($Col = 0; $Col -lt $Length; $Col++)
 	{
 		[void] $StringBuilder.Append(($ScreenBuffer[$Row, $Col]).Character)
 	}
 
 	# output line
 
-	Write-Output $StringBuilder.ToString().TrimEnd()
+	Write-Output $StringBuilder.ToString()
 }
 
 #=======================================================================================================================
