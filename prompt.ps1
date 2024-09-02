@@ -12,27 +12,25 @@ function prompt
 
 	$CurrentPath = ($PathInfo.Drive -ne $null) ? $PathInfo.Path : $PathInfo.ProviderPath
 
+	# abbreviate home directory
+
 	if ($CurrentPath.StartsWith($Home, [System.StringComparison]::OrdinalIgnoreCase))
 	{
 		$CurrentPath = "~" + $CurrentPath.SubString($Home.Length)
 	}
 
-	# set title
+	# set window title
 
-	$PSVersion = $PSVersionTable.PSVersion
+	$Administrator = (Test-Administrator) ? "Administrator: " : ""
 
-	$WindowTitle = "{0} -- PowerShell {1}.{2}.{3} ({4})" -f $CurrentPath, $PSVersion.Major,
-		$PSVersion.Minor, $PSVersion.Patch, ((Test-64BitProcess) ? "x64" : "x86")
+	$Instance = (Test-Path "Variable:ConsoleTitle") ? "$ConsoleTitle - " : ""
 
-	if (Test-Path "Variable:ConsoleTitle")
-	{
-		$WindowTitle += " -- " + $ConsoleTitle
-	}
+	$Version = $PSVersionTable.PSVersion
 
-	if (Test-Administrator)
-	{
-		$WindowTitle = "Administrator: " + $WindowTitle
-	}
+	$Arch = (Test-64BitProcess) ? "64" : "86"
+
+	$WindowTitle = "{0}{1}PowerShell {2}.{3}.{4} (x{5})  {6}" -f $Administrator, $Instance, $Version.Major,
+		$Version.Minor, $Version.Patch, $Arch, $CurrentPath
 
 	$Host.UI.RawUI.WindowTitle = $WindowTitle
 
