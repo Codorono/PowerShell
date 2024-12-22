@@ -18,47 +18,41 @@ function qs
 
 #=======================================================================================================================
 
-function Get-Plural($Number)
-{
-	($Number -eq 1) ? "" : "s"
-}
-
-#=======================================================================================================================
-
-function Get-Plurale($Number)
-{
-	($Number -eq 1) ? "" : "es"
-}
-
-#=======================================================================================================================
-
-function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
-{
-	if ($String2.Length -ne 0)
-	{
-		if ($String1.Length -ne 0)
-		{
-			if (-not (($String1.EndsWith($Separator)) -or ($String2.StartsWith($Separator))))
-			{
-				$String1 += $Separator
-			}
-		}
-
-		$String1 += $String2
-	}
-
-	$String1
-}
-
-#=======================================================================================================================
-
 function Get-OSVersion
 {
-	# Vista=0x0600, Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00
+	# Vista=0x0600, Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00, Win11=???
 
 	$OSVersion = [System.Environment]::OSVersion.Version
 
 	(($OSVersion.Major -shl 8) -bor $OSVersion.Minor)
+}
+
+#=======================================================================================================================
+
+function Get-ProcessArchitecture
+{
+	# x86, x64, arm64
+
+	switch ([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)
+	{
+		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
+		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
+		default { "x86" }
+	}
+}
+
+#=======================================================================================================================
+
+function Get-SystemArchitecture
+{
+	# x86, x64, arm64
+
+	switch ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)
+	{
+		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
+		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
+		default { "x86" }
+	}
 }
 
 #=======================================================================================================================
@@ -97,6 +91,40 @@ function Test-VirtualPC
 	$Baseboard = Get-CimInstance -Namespace "root\CIMV2" -ClassName "Win32_Baseboard"
 
 	(($Baseboard.Manufacturer -eq "Microsoft Corporation") -and ($Baseboard.Product -eq "Virtual Machine"))
+}
+
+#=======================================================================================================================
+
+function Get-Plural($Number)
+{
+	($Number -eq 1) ? "" : "s"
+}
+
+#=======================================================================================================================
+
+function Get-Plurale($Number)
+{
+	($Number -eq 1) ? "" : "es"
+}
+
+#=======================================================================================================================
+
+function Join-Strings([string] $String1, [string] $Separator, [string] $String2)
+{
+	if ($String2.Length -ne 0)
+	{
+		if ($String1.Length -ne 0)
+		{
+			if (-not (($String1.EndsWith($Separator)) -or ($String2.StartsWith($Separator))))
+			{
+				$String1 += $Separator
+			}
+		}
+
+		$String1 += $String2
+	}
+
+	$String1
 }
 
 #=======================================================================================================================
