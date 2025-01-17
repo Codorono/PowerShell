@@ -37,6 +37,6 @@ public static extern void StrFormatByteSizeEx(long ull, int flags,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, uint cchBuf);
 "@
 
-Add-Type "Shlwapi" $MemberDefinition -Namespace "Win32"
+Add-Type -Name "Shlwapi" -MemberDefinition $MemberDefinition -Namespace "Win32"
 
 #=======================================================================================================================

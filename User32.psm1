@@ -236,12 +236,11 @@ public static extern System.IntPtr GetShellWindow();
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
-public static extern bool PostMessageW(System.IntPtr hWnd, uint uMsg,
-	System.IntPtr wParam, System.IntPtr lParam);
+public static extern bool PostMessageW(System.IntPtr hWnd, uint uMsg, System.IntPtr wParam, System.IntPtr lParam);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg,
-	System.IntPtr wParam, System.IntPtr lParam);
+public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg, System.IntPtr wParam,
+	System.IntPtr lParam);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
@@ -256,6 +255,6 @@ public static extern int MessageBoxTimeoutW(System.IntPtr hWnd, [MarshalAs(Unman
 	[MarshalAs(UnmanagedType.LPWStr)] string lpCaption, uint uType, ushort wLanguageId, uint dwMilliseconds);
 "@
 
-Add-Type "User32" $MemberDefinition -Namespace "Win32"
+Add-Type -Name "User32" -MemberDefinition $MemberDefinition -Namespace "Win32"
 
 #=======================================================================================================================

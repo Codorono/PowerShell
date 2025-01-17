@@ -300,7 +300,7 @@ public static extern System.IntPtr CreateFileW(
 	public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
-Add-Type "Kernel32" $MemberDefinition -Namespace "Win32"
+Add-Type -Name "Kernel32" -MemberDefinition $MemberDefinition -Namespace "Win32"
 
 # Types are:
 # Win32.Kernel32

@@ -84,6 +84,28 @@ function Get-KnownFolderPath
 
 #=======================================================================================================================
 
+function Select-FolderItem
+{
+	param([Parameter(Mandatory)] [string] $FileSpec)
+
+	# parse file spec into absolute pidl
+
+	$Pidl = [System.IntPtr]::Zero
+	$Sfgaof = 0
+
+	[Win32.Shell32]::SHParseDisplayName($FileSpec, [System.IntPtr]::Zero, [ref] $Pidl, 0, [ref] $Sfgaof)
+
+	# open file explorer and select item
+
+	[Win32.Shell32]::SHOpenFolderAndSelectItems($Pidl, 0, [System.IntPtr]::Zero, 0)
+
+	# free pidl pointer
+
+	[System.Runtime.InteropServices.Marshal]::FreeCoTaskMem($Pidl)
+}
+
+#=======================================================================================================================
+
 Set-Variable "KF_FLAG_DEFAULT" 0x00000000 -Option Constant
 Set-Variable "KF_FLAG_CREATE" 0x00008000 -Option Constant
 Set-Variable "KF_FLAG_DONT_VERIFY" 0x00004000 -Option Constant
@@ -94,17 +116,17 @@ Set-Variable "KF_FLAG_DEFAULT_PATH" 0x00000400 -Option Constant
 
 $FolderIds =
 @{
-#   "Network" = [guid] "D20BEEC4-5CA8-4905-AE3B-BF251EA09B53"
-#   "Computer" = [guid] "0AC0837C-BBF8-452A-850D-79D08E667CA7"
-#   "Internet" = [guid] "4D9F7874-4E0C-4904-967B-40B0D20C3E4B"
-#   "ControlPanel" = [guid] "82A74AEB-AEB4-465C-A014-D097EE346D63"
-#   "Printers" = [guid] "76FC4E2D-D6AD-4519-A663-37BD56068185"
-#   "SyncCenter" = [guid] "43668BF8-C14E-49B2-97C9-747784D784B7"
-#   "SyncSetup" = [guid] "0F214138-B1D3-4a90-BBA9-27CBC0C5389A"
-#   "Conflict" = [guid] "4bfefb45-347d-4006-a5be-ac0cb0567192"
-#   "SyncResults" = [guid] "289a9a43-be44-4057-a41b-587a76d7e7f9"
-#   "RecycleBin" = [guid] "B7534046-3ECB-4C18-BE4E-64CD4CB7D6AC"
-#   "Connections" = [guid] "6F0CD92B-2E97-45D1-88FF-B0D186B8DEDD"
+#	"Network" = [guid] "D20BEEC4-5CA8-4905-AE3B-BF251EA09B53"
+#	"Computer" = [guid] "0AC0837C-BBF8-452A-850D-79D08E667CA7"
+#	"Internet" = [guid] "4D9F7874-4E0C-4904-967B-40B0D20C3E4B"
+#	"ControlPanel" = [guid] "82A74AEB-AEB4-465C-A014-D097EE346D63"
+#	"Printers" = [guid] "76FC4E2D-D6AD-4519-A663-37BD56068185"
+#	"SyncCenter" = [guid] "43668BF8-C14E-49B2-97C9-747784D784B7"
+#	"SyncSetup" = [guid] "0F214138-B1D3-4a90-BBA9-27CBC0C5389A"
+#	"Conflict" = [guid] "4bfefb45-347d-4006-a5be-ac0cb0567192"
+#	"SyncResults" = [guid] "289a9a43-be44-4057-a41b-587a76d7e7f9"
+#	"RecycleBin" = [guid] "B7534046-3ECB-4C18-BE4E-64CD4CB7D6AC"
+#	"Connections" = [guid] "6F0CD92B-2E97-45D1-88FF-B0D186B8DEDD"
 	"Fonts" = [guid] "FD228CB7-AE11-4AE3-864C-16F3910AB8FE"
 	"Desktop" = [guid] "B4BFCC3A-DB2C-424C-B029-7FE99A87C641"
 	"Startup" = [guid] "B97D20BB-F46A-4C97-BA10-5E3608430854"
@@ -164,9 +186,9 @@ $FolderIds =
 	"SampleVideos" = [guid] "859EAD94-2E85-48AD-A71A-0969CB56A6CD"
 	"PhotoAlbums" = [guid] "69D2CF90-FC33-4FB7-9A0C-EBB0F0FCB43C"
 	"Public" = [guid] "DFDF76A2-C82A-4D63-906A-5644AC457385"
-#   "ChangeRemovePrograms" = [guid] "df7266ac-9274-4867-8d55-3bd661de872d"
-#   "AppUpdates" = [guid] "a305ce99-f527-492b-8b1a-7e76fa98d6e4"
-#   "AddNewPrograms" = [guid] "de61d971-5ebc-4f02-a3a9-6c82895e5c04"
+#	"ChangeRemovePrograms" = [guid] "df7266ac-9274-4867-8d55-3bd661de872d"
+#	"AppUpdates" = [guid] "a305ce99-f527-492b-8b1a-7e76fa98d6e4"
+#	"AddNewPrograms" = [guid] "de61d971-5ebc-4f02-a3a9-6c82895e5c04"
 	"Downloads" = [guid] "374DE290-123F-4565-9164-39C4925E467B"
 	"PublicDownloads" = [guid] "3D644C9B-1FB8-4f30-9B45-F670235F79C0"
 	"Searches" = [guid] "7d1d3a04-debb-4115-95cf-2f29da2920da"
@@ -177,21 +199,21 @@ $FolderIds =
 	"PublicGameTasks" = [guid] "DEBF2536-E1A8-4c59-B6A2-414586476AEA"
 	"GameTasks" = [guid] "054FAE61-4DD8-4787-80B6-090220C4B700"
 	"SavedGames" = [guid] "4C5C32FF-BB9D-43b0-B5B4-2D72E54EAAA4"
-#   "Games" = [guid] "CAC52C1A-B53D-4edc-92D7-6B2E8AC19434"
-#   "SearchMAPI" = [guid] "98ec0e18-2098-4d44-8644-66979315a281"
-#   "SearchCSC" = [guid] "ee32e446-31ca-4aba-814f-a5ebd2fd6d5e"
+#	"Games" = [guid] "CAC52C1A-B53D-4edc-92D7-6B2E8AC19434"
+#	"SearchMAPI" = [guid] "98ec0e18-2098-4d44-8644-66979315a281"
+#	"SearchCSC" = [guid] "ee32e446-31ca-4aba-814f-a5ebd2fd6d5e"
 	"Links" = [guid] "bfb9d5e0-c6a9-404c-b2b2-ae6db6af4968"
-#   "UsersFiles" = [guid] "f3ce0f7c-4901-4acc-8648-d5d44b04ef8f"
-#   "UsersLibraries" = [guid] "A302545D-DEFF-464b-ABE8-61C8648D939B"
-#   "SearchHome" = [guid] "190337d1-b8ca-4121-a639-6d472d16972a"
+#	"UsersFiles" = [guid] "f3ce0f7c-4901-4acc-8648-d5d44b04ef8f"
+#	"UsersLibraries" = [guid] "A302545D-DEFF-464b-ABE8-61C8648D939B"
+#	"SearchHome" = [guid] "190337d1-b8ca-4121-a639-6d472d16972a"
 	"OriginalImages" = [guid] "2C36C0AA-5812-4b87-BFD0-4CD0DFB19B39"
 	"DocumentsLibrary" = [guid] "7b0db17d-9cd2-4a93-9733-46cc89022e7c"
 	"MusicLibrary" = [guid] "2112AB0A-C86A-4ffe-A368-0DE96E47012E"
 	"PicturesLibrary" = [guid] "A990AE9F-A03B-4e80-94BC-9912D7504104"
 	"VideosLibrary" = [guid] "491E922F-5643-4af4-A7EB-4E7A138D8174"
 	"RecordedTVLibrary" = [guid] "1A6FDBA2-F42D-4358-A798-B74D745926C5"
-#   "HomeGroup" = [guid] "52528A6B-B9E3-4add-B60D-588C2DBA842D"
-#   "HomeGroupCurrentUser" = [guid] "9B74B6A3-0DFD-4f11-9E78-5F7800F2E772"
+#	"HomeGroup" = [guid] "52528A6B-B9E3-4add-B60D-588C2DBA842D"
+#	"HomeGroupCurrentUser" = [guid] "9B74B6A3-0DFD-4f11-9E78-5F7800F2E772"
 	"DeviceMetadataStore" = [guid] "5CE4A5E9-E4EB-479D-B89F-130C02886155"
 	"Libraries" = [guid] "1B3EA5DC-B587-4786-B4EF-BD1DC332AEAE"
 	"PublicLibraries" = [guid] "48daf80b-e6cf-4f4e-b800-0e69d84ee384"
@@ -199,8 +221,8 @@ $FolderIds =
 	"ImplicitAppShortcuts" = [guid] "bcb5256f-79f6-4cee-b725-dc34e402fd46"
 	"AccountPictures" = [guid] "008ca0b1-55b4-4c56-b8a8-4de4b299d3be"
 	"PublicAccountPictures" = [guid] "0482af6c-08f1-4c34-8c90-e17ec98b1e17"
-#   "Apps" = [guid] "1e87508d-89c2-42f0-8a7e-645a0f50ca58"
-#   "StartMenuAllPrograms" = [guid] "F26305EF-6948-40B9-B255-81453D09C785"
+#	"Apps" = [guid] "1e87508d-89c2-42f0-8a7e-645a0f50ca58"
+#	"StartMenuAllPrograms" = [guid] "F26305EF-6948-40B9-B255-81453D09C785"
 	"CommonStartMenuPlaces" = [guid] "A440879F-87A0-4F7D-B700-0207B966194A"
 	"ApplicationShortcuts" = [guid] "A3918781-E5F2-4890-B3D9-A7E54332328C"
 	"RoamingTiles" = [guid] "00BCFC5A-ED94-4e48-96A1-3F6217F21990"
@@ -218,7 +240,7 @@ $FolderIds =
 	"SavedPictures" = [guid] "3B193882-D3AD-4eab-965A-69829D1FB59F"
 	"SavedPicturesLibrary" = [guid] "E25B5812-BE88-4bd9-94B0-29233477B6C3"
 	"RetailDemo" = [guid] "12D4C69E-24AD-4923-BE19-31321C43A767"
-#   "Device" = [guid] "1C2AC1DC-4358-4B6C-9733-AF21156576F0"
+#	"Device" = [guid] "1C2AC1DC-4358-4B6C-9733-AF21156576F0"
 	"DevelopmentFiles" = [guid] "DBE8E08E-3053-4BBC-B183-2A7B2B191E59"
 	"3DObjects" = [guid] "31C0DD25-9439-4F12-BF41-7FF4EDA38722"
 	"Captures" = [guid] "EDC0FE71-98D8-4F4A-B920-C8DC133CB165"
@@ -251,8 +273,16 @@ $MemberDefinition =
 [DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
 public static extern void SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] System.Guid rfid,
 	uint dwFlags, System.IntPtr hToken, out System.IntPtr pszPath);
+
+[DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
+public static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] string pszName, System.IntPtr pbc,
+	out System.IntPtr ppidl, uint sfgaoIn, out uint psfgaoOut);
+
+[DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
+public static extern void SHOpenFolderAndSelectItems(System.IntPtr pidlFolder, uint cidl,
+	[MarshalAs(UnmanagedType.LPArray)] System.IntPtr[] apidl, uint dwFlags);
 "@
 
-Add-Type "Shell32" $MemberDefinition -Namespace "Win32"
+Add-Type -Name "Shell32" -MemberDefinition $MemberDefinition -Namespace "Win32"
 
 #=======================================================================================================================

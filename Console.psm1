@@ -618,7 +618,7 @@ public static extern System.IntPtr CreateFileW(
 public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
-Add-Type "Console" $MemberDefinition -Namespace "Win32"
+Add-Type -Name "Console" -MemberDefinition $MemberDefinition -Namespace "Win32"
 
 # Types are:
 # Win32.Console
