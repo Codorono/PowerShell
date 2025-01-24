@@ -32,7 +32,7 @@ CMD.exe /c "`"$Path`" $Parms && SET" | ForEach-Object `
 
 	# set environment variable
 
-	elseif (-not $_.StartsWith("PROMPT="))
+	elseif ($matches[1] -ne "PROMPT")
 	{
 		Set-Item "Env:$($matches[1])" $matches[2]
 	}
