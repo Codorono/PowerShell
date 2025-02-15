@@ -18,13 +18,21 @@ function qs
 
 #=======================================================================================================================
 
-function Get-OSVersion
+function Get-WinVer
 {
-	# Vista=0x0600, Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00, Win11=???
+	# Vista=0x0600, Win7=0x0601, Win8=0x0602, Win81=0x0603, Win10=0x0A00, Win11=0x0B00
 
 	$OSVersion = [System.Environment]::OSVersion.Version
 
-	(($OSVersion.Major -shl 8) -bor $OSVersion.Minor)
+	$Major = $OSVersion.Major
+	$Minor = $OSVersion.Minor
+
+	if (($Major -eq 10) -and ($OSVersion.Build -ge 22000))
+	{
+		$Major = 11
+	}
+
+	(($Major -shl 8) -bor $Minor)
 }
 
 #=======================================================================================================================
@@ -36,7 +44,7 @@ function Test-64BitProcess
 
 #=======================================================================================================================
 
-function Test-64BitOperatingSystem
+function Test-64BitSystem
 {
 	[System.Environment]::Is64BitOperatingSystem
 }
@@ -45,32 +53,32 @@ function Test-64BitOperatingSystem
 
 function Get-ProcessArchitecture
 {
-	# arm64, x64, x86, etc.
+	# x86, x64, arm64, etc.
 
 	$ProcessArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
 
 	switch ($ProcessArchitecture)
 	{
-		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
-		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
 		([System.Runtime.InteropServices.Architecture]::X86) { "x86" }
+		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
+		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
 		default { $ProcessArchitecture.ToString() }
 	}
 }
 
 #=======================================================================================================================
 
-function Get-OSArchitecture
+function Get-SystemArchitecture
 {
-	# arm64, x64, x86, etc.
+	# x86, x64, arm64, etc.
 
 	$OSArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
 
 	switch ($OSArchitecture)
 	{
-		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
-		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
 		([System.Runtime.InteropServices.Architecture]::X86) { "x86" }
+		([System.Runtime.InteropServices.Architecture]::X64) { "x64" }
+		([System.Runtime.InteropServices.Architecture]::Arm64) { "arm64" }
 		default { $OSArchitecture.ToString() }
 	}
 }

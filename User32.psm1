@@ -11,6 +11,26 @@ function Get-ShellWindow()
 
 #=======================================================================================================================
 
+function Test-WindowsTerminal()
+{
+	$Result = $false
+
+	$ConsoleWnd = [Win32.Console]::GetConsoleWindow()
+
+	if ($ConsoleWnd -ne [System.IntPtr]::Zero)
+	{
+		$StringBuilder = [System.Text.StringBuilder]::new(256)
+
+		[Win32.User32]::GetClassNameW($ConsoleWnd, $StringBuilder, $StringBuilder.Capacity)
+
+		$Result = ($StringBuilder.ToString() -eq "PseudoConsoleWindow")
+	}
+
+	$Result
+}
+
+#=======================================================================================================================
+
 function Post-Message
 (
 	[System.IntPtr] $HWnd,
@@ -233,6 +253,10 @@ $MemberDefinition =
 @"
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = false)]
 public static extern System.IntPtr GetShellWindow();
+
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern void GetClassNameW(System.IntPtr hWnd,
+	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, int nMaxCount);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
