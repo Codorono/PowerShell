@@ -17,35 +17,35 @@ $ScreenBuffer = $RawUI.GetBufferContents(@{Left = 0; Top = 0; Right = $Width; Bo
 
 # get line chars buffer
 
-$StringBuilder = [System.Text.StringBuilder]::new($Width)
+$LineChars = [System.Text.StringBuilder]::new($Width)
 
 # iterate through screen buffer lines
 
-for ($Row = 0; $Row -lt $Height; $Row++)
+for ($Line = 0; $Line -lt $Height; $Line++)
 {
-	# get length of line
+	# get line length excluding trailing spaces
 
 	$Length = $Width
 
-	while (($Length -gt 0) -and ($ScreenBuffer[$Row, ($Length - 1)].Character -eq " "))
+	while (($Length -gt 0) -and ($ScreenBuffer[$Line, ($Length - 1)].Character -eq " "))
 	{
 		$Length--
 	}
 
 	# empty line chars buffer
 
-	[void] $StringBuilder.Clear()
+	[void] $LineChars.Clear()
 
 	# concatenate line chars
 
-	for ($Col = 0; $Col -lt $Length; $Col++)
+	for ($Column = 0; $Column -lt $Length; $Column++)
 	{
-		[void] $StringBuilder.Append(($ScreenBuffer[$Row, $Col]).Character)
+		[void] $LineChars.Append(($ScreenBuffer[$Line, $Column]).Character)
 	}
 
 	# output line
 
-	Write-Output $StringBuilder.ToString()
+	Write-Output $LineChars.ToString()
 }
 
 #=======================================================================================================================
