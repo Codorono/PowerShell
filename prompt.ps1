@@ -29,7 +29,7 @@ function prompt
 
 	$Arch = Get-ProcessArchitecture
 
-	$WindowTitle = "{0}{1}PowerShell {2}.{3}.{4} ({5})  {6}" -f $Administrator, $Instance, $Version.Major,
+	$WindowTitle = "{0}{1}PowerShell {2}.{3}.{4} ({5}) {6}" -f $Administrator, $Instance, $Version.Major,
 		$Version.Minor, $Version.Patch, $Arch, $CurrentPath
 
 	$Host.UI.RawUI.WindowTitle = $WindowTitle
