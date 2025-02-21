@@ -280,35 +280,66 @@ function Out-Speak
 
 #=======================================================================================================================
 
-function MkLink
+function DD
+{
+	& (Join-Path (Get-FolderPath "PmacBin") "D.exe") /rd $args
+}
+
+#=======================================================================================================================
+
+function DDD
+{
+	& (Join-Path (Get-FolderPath "PmacBin") "D.exe") /id $args
+}
+
+#=======================================================================================================================
+
+function BF
+{
+	& (Join-Path (Get-FolderPath "PmacBin") "BEEP.exe")
+	& (Join-Path (Get-FolderPath "PmacBin") "FORE.exe")
+}
+
+#=======================================================================================================================
+
+function BFS
+{
+	& (Join-Path (Get-FolderPath "PmacBin") "BEEP.exe")
+	& (Join-Path (Get-FolderPath "PmacBin") "FORE.exe")
+	& (Join-Path (Get-FolderPath "PmacBin") "SEND.exe") all $([System.Environment]::MachineName) is done
+}
+
+#=======================================================================================================================
+
+function MKLINK
 {
 	CMD.exe /c MKLINK $args
 }
 
 #=======================================================================================================================
 
-function Code
+function CODE
 {
 	CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
 }
 
 #=======================================================================================================================
 
-function GitHub
+function GITHUB
 {
 	CMD.exe /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
 }
 
 #=======================================================================================================================
 
-function Npm
+function NPM
 {
 	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
 }
 
 #=======================================================================================================================
 
-function Npx
+function NPX
 {
 	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
 }
