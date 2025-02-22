@@ -235,7 +235,8 @@ $MemberDefinition =
 public static extern System.IntPtr GetShellWindow();
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern void GetClassNameW(System.IntPtr hWnd,
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetClassNameW(System.IntPtr hWnd,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, int nMaxCount);
 
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]

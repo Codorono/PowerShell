@@ -21,7 +21,10 @@ function Test-WindowsTerminal()
 	{
 		$StringBuilder = [System.Text.StringBuilder]::new(256)
 
-		[Win32.Console]::GetClassNameW($ConsoleWnd, $StringBuilder, $StringBuilder.Capacity)
+		if (-not [Win32.User32]::GetClassNameW($ConsoleWnd, $StringBuilder, $StringBuilder.Capacity))
+		{
+			throw ([System.ComponentModel.Win32Exception]::new())
+		}
 
 		$Result = ($StringBuilder.ToString() -eq "PseudoConsoleWindow")
 	}
@@ -62,7 +65,7 @@ function Enable-ConsoleVTProcessing
 {
 	# get screen buffer
 
-	$Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+	$Screen = [Win32.Kernel32]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
 		$FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
 
 	if ($Screen -eq $INVALID_HANDLE_VALUE)
@@ -97,7 +100,7 @@ function Enable-ConsoleVTProcessing
 
 	# close screen buffer
 
-	if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+	if (-not [Win32.Kernel32]::CloseHandle($Screen))
 	{
 		throw ([System.ComponentModel.Win32Exception]::new())
 	}
@@ -109,7 +112,7 @@ function Get-ScreenAttributes
 {
 	# get screen buffer
 
-	$Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+	$Screen = [Win32.Kernel32]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
 		$FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
 
 	if ($Screen -eq $INVALID_HANDLE_VALUE)
@@ -132,7 +135,7 @@ function Get-ScreenAttributes
 
 	# close screen buffer
 
-	if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+	if (-not [Win32.Kernel32]::CloseHandle($Screen))
 	{
 		throw ([System.ComponentModel.Win32Exception]::new())
 	}
@@ -144,7 +147,7 @@ function Clear-Screen
 {
 	# get screen buffer
 
-	$Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+	$Screen = [Win32.Kernel32]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
 		$FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
 
 	if ($Screen -eq $INVALID_HANDLE_VALUE)
@@ -193,7 +196,7 @@ function Clear-Screen
 
 	# close screen buffer
 
-	if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+	if (-not [Win32.Kernel32]::CloseHandle($Screen))
 	{
 		throw ([System.ComponentModel.Win32Exception]::new())
 	}
@@ -263,7 +266,7 @@ function Set-ConsoleBackgroundColor
 
 	# get screen buffer
 
-	$Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+	$Screen = [Win32.Kernel32]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
 		$FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
 
 	if ($Screen -eq $INVALID_HANDLE_VALUE)
@@ -324,7 +327,7 @@ function Set-ConsoleBackgroundColor
 
 	# close screen buffer
 
-	if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+	if (-not [Win32.Kernel32]::CloseHandle($Screen))
 	{
 		throw ([System.ComponentModel.Win32Exception]::new())
 	}
@@ -444,7 +447,7 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 	# get screen buffer
 
-	$Screen = [Win32.Console]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
+	$Screen = [Win32.Kernel32]::CreateFileW("CONOUT$", ($GENERIC_READ -bor $GENERIC_WRITE),
 		$FILE_SHARE_WRITE, [System.IntPtr]::Zero, $OPEN_EXISTING, 0, [System.IntPtr]::Zero)
 
 	if ($Screen -eq $INVALID_HANDLE_VALUE)
@@ -509,7 +512,7 @@ function Set-ConsoleColorScheme([string] $Scheme)
 
 	# close screen buffer
 
-	if ([Win32.Kernel32]::CloseHandle($Screen) -eq 0)
+	if (-not [Win32.Kernel32]::CloseHandle($Screen))
 	{
 		throw ([System.ComponentModel.Win32Exception]::new())
 	}
@@ -627,19 +630,6 @@ public static extern int FillConsoleOutputAttribute(System.IntPtr hConsoleHandle
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetConsoleCursorPosition(
 	System.IntPtr hConsoleHandle, COORD dwCursorPosition);
-
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern void GetClassNameW(System.IntPtr hWnd,
-	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, int nMaxCount);
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern System.IntPtr CreateFileW(
-	[MarshalAs(UnmanagedType.LPWStr)] string lpFileName, uint dwDesiredAccess, uint dwShareMode,
-	System.IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes,
-	System.IntPtr hTemplateFile);
-
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int CloseHandle(System.IntPtr hObject);
 "@
 
 Add-Type -Name "Console" -MemberDefinition $MemberDefinition -Namespace "Win32"

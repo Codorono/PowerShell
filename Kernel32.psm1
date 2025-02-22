@@ -297,7 +297,8 @@ public static extern System.IntPtr CreateFileW(
 	System.IntPtr hTemplateFile);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-	public static extern int CloseHandle(System.IntPtr hObject);
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool CloseHandle(System.IntPtr hObject);
 "@
 
 Add-Type -Name "Kernel32" -MemberDefinition $MemberDefinition -Namespace "Win32"
