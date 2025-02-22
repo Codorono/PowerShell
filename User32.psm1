@@ -11,26 +11,6 @@ function Get-ShellWindow()
 
 #=======================================================================================================================
 
-function Test-WindowsTerminal()
-{
-	$Result = $false
-
-	$ConsoleWnd = [Win32.Console]::GetConsoleWindow()
-
-	if ($ConsoleWnd -ne [System.IntPtr]::Zero)
-	{
-		$StringBuilder = [System.Text.StringBuilder]::new(256)
-
-		[Win32.User32]::GetClassNameW($ConsoleWnd, $StringBuilder, $StringBuilder.Capacity)
-
-		$Result = ($StringBuilder.ToString() -eq "PseudoConsoleWindow")
-	}
-
-	$Result
-}
-
-#=======================================================================================================================
-
 function Post-Message
 (
 	[System.IntPtr] $HWnd,

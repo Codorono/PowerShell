@@ -11,6 +11,26 @@ function Get-ConsoleWindow
 
 #=======================================================================================================================
 
+function Test-WindowsTerminal()
+{
+	$Result = $false
+
+	$ConsoleWnd = [Win32.Console]::GetConsoleWindow()
+
+	if ($ConsoleWnd -ne [System.IntPtr]::Zero)
+	{
+		$StringBuilder = [System.Text.StringBuilder]::new(256)
+
+		[Win32.Console]::GetClassNameW($ConsoleWnd, $StringBuilder, $StringBuilder.Capacity)
+
+		$Result = ($StringBuilder.ToString() -eq "PseudoConsoleWindow")
+	}
+
+	$Result
+}
+
+#=======================================================================================================================
+
 function Test-StdOutputConsole
 {
 	$Console = $false
@@ -607,6 +627,10 @@ public static extern int FillConsoleOutputAttribute(System.IntPtr hConsoleHandle
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern int SetConsoleCursorPosition(
 	System.IntPtr hConsoleHandle, COORD dwCursorPosition);
+
+[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+public static extern void GetClassNameW(System.IntPtr hWnd,
+	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, int nMaxCount);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern System.IntPtr CreateFileW(
