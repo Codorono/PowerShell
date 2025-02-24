@@ -230,7 +230,7 @@ $MemberDefinition =
 public static extern void SHGetKnownFolderPath([MarshalAs(UnmanagedType.LPStruct)] System.Guid rfid,
 	uint dwFlags, System.IntPtr hToken, out System.IntPtr pszPath);
 
-[DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
+[DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, CharSet = CharSet.Unicode, SetLastError = false)]
 public static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] string pszName, System.IntPtr pbc,
 	out System.IntPtr ppidl, uint sfgaoIn, out uint psfgaoOut);
 

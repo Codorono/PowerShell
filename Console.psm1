@@ -602,34 +602,41 @@ public static extern System.IntPtr GetStdHandle(uint nStdHandle);
 public static extern uint GetFileType(System.IntPtr hFile);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetConsoleMode(System.IntPtr hConsoleHandle, out uint lpMode);
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetConsoleMode(System.IntPtr hConsoleHandle, out uint lpMode);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int SetConsoleMode(System.IntPtr hConsoleHandle, uint dwMode);
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetConsoleMode(System.IntPtr hConsoleHandle, uint dwMode);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetConsoleScreenBufferInfo(System.IntPtr hConsoleOutput,
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetConsoleScreenBufferInfo(System.IntPtr hConsoleOutput,
 	ref CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
 	ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetConsoleScreenBufferInfoEx(System.IntPtr hConsoleOutput,
 	ref CONSOLE_SCREEN_BUFFER_INFOEX lpConsoleScreenBufferInfoEx);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int FillConsoleOutputCharacterW(System.IntPtr hConsoleHandle,
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool FillConsoleOutputCharacterW(System.IntPtr hConsoleHandle,
 	char cCharacter, uint nLength, COORD dwWriteCoord, out uint lpNumberOfCharsWritten);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int FillConsoleOutputAttribute(System.IntPtr hConsoleHandle,
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool FillConsoleOutputAttribute(System.IntPtr hConsoleHandle,
 	ushort wAttribute, uint nLength, COORD dwWriteCoord, out uint lpNumberOfAttrsWritten);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int SetConsoleCursorPosition(
-	System.IntPtr hConsoleHandle, COORD dwCursorPosition);
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetConsoleCursorPosition(System.IntPtr hConsoleHandle, COORD dwCursorPosition);
 "@
 
 Add-Type -Name "Console" -MemberDefinition $MemberDefinition -Namespace "Win32"

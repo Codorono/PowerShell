@@ -242,7 +242,7 @@ public struct MEMORY_BASIC_INFORMATION
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool Beep(uint uFreq, uint uDuration);
 
-[DllImport("kernel32.dll", ExactSpelling = true)]
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = false)]
 public static extern void OutputDebugStringW([MarshalAs(UnmanagedType.LPWStr)] string lpOutputString);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = false)]
@@ -251,36 +251,41 @@ public static extern System.IntPtr GetCurrentProcess();
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern uint GetFileType(System.IntPtr hFile);
 
-[DllImport("kernel32.dll", ExactSpelling = true)]
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
 public static extern uint GetDriveTypeW([MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
 public static extern uint GetPriorityClass(System.IntPtr hProcess);
 
 [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int SetPriorityClass(System.IntPtr hProcess, uint uPriorityClass);
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetPriorityClass(System.IntPtr hProcess, uint uPriorityClass);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int DefineDosDeviceW(uint uFlags,
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool DefineDosDeviceW(uint uFlags,
 	[MarshalAs(UnmanagedType.LPWStr)] string lpDeviceName,
 	[MarshalAs(UnmanagedType.LPWStr)] string lpTargetPath);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetVolumeInformationW(
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetVolumeInformationW(
 	[MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
 	out uint lpVolumeSerialNumber, out uint lpMaximumComponentLength, out uint lpFileSystemFlags,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetVolumeInformationW(
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetVolumeInformationW(
 	[MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder lpVolumeNameBuffer, uint nVolumeNameSize,
 	System.IntPtr lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
 	System.IntPtr lpFileSystemNameBuffer, uint nFileSystemNameSize);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
-public static extern int GetVolumeInformationW(
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool GetVolumeInformationW(
 	[MarshalAs(UnmanagedType.LPWStr)] string lpRootPathName,
 	System.IntPtr lpVolumeNameBuffer, uint nVolumeNameSize,
 	out uint lpVolumeSerialNumber, System.IntPtr lpMaximumComponentLength, System.IntPtr lpFileSystemFlags,
@@ -290,7 +295,12 @@ public static extern int GetVolumeInformationW(
 public static extern System.IntPtr VirtualQueryEx(System.IntPtr hProcess, System.IntPtr lpAddress,
 	ref MEMORY_BASIC_INFORMATION lpBuffer, System.IntPtr dwLength);
 
-[DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool CopyFileW([MarshalAs(UnmanagedType.LPWStr)] string lpExistingFileName,
+	[MarshalAs(UnmanagedType.LPWStr)] string lpNewFileName, bool bFailIfExists);
+
+[DllImport("kernel32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 public static extern System.IntPtr CreateFileW(
 	[MarshalAs(UnmanagedType.LPWStr)] string lpFileName, uint dwDesiredAccess, uint dwShareMode,
 	System.IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes,

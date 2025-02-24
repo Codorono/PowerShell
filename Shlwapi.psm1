@@ -32,7 +32,7 @@ function Format-ByteSize([long] $Number, [switch] $Truncate)
 
 $MemberDefinition =
 @"
-[DllImport("shlwapi.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
+[DllImport("shlwapi.dll", ExactSpelling = true, PreserveSig = false, CharSet = CharSet.Unicode, SetLastError = false)]
 public static extern void StrFormatByteSizeEx(long ull, int flags,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, uint cchBuf);
 "@

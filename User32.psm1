@@ -234,16 +234,16 @@ $MemberDefinition =
 [DllImport("user32.dll", ExactSpelling = true, SetLastError = false)]
 public static extern System.IntPtr GetShellWindow();
 
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool GetClassNameW(System.IntPtr hWnd,
 	[MarshalAs(UnmanagedType.LPWStr)] System.Text.StringBuilder pszBuf, int nMaxCount);
 
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool PostMessageW(System.IntPtr hWnd, uint uMsg, System.IntPtr wParam, System.IntPtr lParam);
 
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg, System.IntPtr wParam,
 	System.IntPtr lParam);
 
@@ -251,11 +251,11 @@ public static extern System.IntPtr SendMessageW(System.IntPtr hWnd, uint uMsg, S
 [return: MarshalAs(UnmanagedType.Bool)]
 public static extern bool MessageBeep(uint uType);
 
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 public static extern int MessageBoxW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string lpText,
 	[MarshalAs(UnmanagedType.LPWStr)] string lpCaption, uint uType);
 
-[DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
 public static extern int MessageBoxTimeoutW(System.IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string lpText,
 	[MarshalAs(UnmanagedType.LPWStr)] string lpCaption, uint uType, ushort wLanguageId, uint dwMilliseconds);
 "@
