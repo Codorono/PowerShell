@@ -9,7 +9,7 @@ function Set-LocationEx
 	[CmdletBinding(DefaultParameterSetName = "Path")]
 	param
 	(
-		[Parameter(Mandatory, Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
+		[Parameter(Position = 0, ParameterSetName = "Path", ValueFromPipeline, ValueFromPipelineByPropertyName)]
 		[string] $Path,
 
 		[Parameter(Mandatory, ParameterSetName = "LiteralPath", ValueFromPipelineByPropertyName)]
