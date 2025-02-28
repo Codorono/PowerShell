@@ -306,7 +306,7 @@ function BFS
 {
 	& (Join-Path (Get-FolderPath "PmacBin") "BEEP.exe")
 	& (Join-Path (Get-FolderPath "PmacBin") "FORE.exe")
-	& (Join-Path (Get-FolderPath "PmacBin") "SEND.exe") all $([System.Environment]::MachineName) is done
+	& (Join-Path (Get-FolderPath "PmacBin") "SEND.exe") all ([System.Environment]::MachineName) is done
 }
 
 #=======================================================================================================================
