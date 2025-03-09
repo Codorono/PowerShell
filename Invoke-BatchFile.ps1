@@ -21,7 +21,7 @@ Set-StrictMode -Version Latest
 
 # execute batch file
 
-CMD.exe /c "`"$Path`" $Parms && SET" | ForEach-Object `
+CMD /c "`"$Path`" $Parms && SET" | ForEach-Object `
 {
 	# write output
 

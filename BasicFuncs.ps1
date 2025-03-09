@@ -313,35 +313,35 @@ function BFS
 
 function MKLINK
 {
-	CMD.exe /c MKLINK $args
+	CMD /c MKLINK $args
 }
 
 #=======================================================================================================================
 
 function CODE
 {
-	CMD.exe /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
+	CMD /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
 }
 
 #=======================================================================================================================
 
 function GITHUB
 {
-	CMD.exe /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
+	CMD /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
 }
 
 #=======================================================================================================================
 
 function NPM
 {
-	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
+	CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
 }
 
 #=======================================================================================================================
 
 function NPX
 {
-	CMD.exe /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
+	CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
 }
 
 #=======================================================================================================================
