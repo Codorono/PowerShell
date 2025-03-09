@@ -282,31 +282,31 @@ function Out-Speak
 
 function DD
 {
-	& (Join-Path (Get-FolderPath "PmacBin") "D.exe") /rd $args
+	D /rd $args
 }
 
 #=======================================================================================================================
 
 function DDD
 {
-	& (Join-Path (Get-FolderPath "PmacBin") "D.exe") /id $args
+	D /id $args
 }
 
 #=======================================================================================================================
 
 function BF
 {
-	& (Join-Path (Get-FolderPath "PmacBin") "BEEP.exe")
-	& (Join-Path (Get-FolderPath "PmacBin") "FORE.exe")
+	BEEP
+	FORE
 }
 
 #=======================================================================================================================
 
 function BFS
 {
-	& (Join-Path (Get-FolderPath "PmacBin") "BEEP.exe")
-	& (Join-Path (Get-FolderPath "PmacBin") "FORE.exe")
-	& (Join-Path (Get-FolderPath "PmacBin") "SEND.exe") all ([System.Environment]::MachineName) is done
+	BEEP
+	FORE
+	SEND all ([System.Environment]::MachineName) is done
 }
 
 #=======================================================================================================================
