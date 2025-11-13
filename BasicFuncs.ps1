@@ -30,6 +30,7 @@ function Get-WinVer
 	if (($Major -eq 10) -and ($OSVersion.Build -ge 22000))
 	{
 		$Major = 11
+		$Minor = 0
 	}
 
 	(($Major -shl 8) -bor $Minor)
@@ -280,75 +281,28 @@ function Out-Speak
 
 #=======================================================================================================================
 
-function DD
-{
-	D /rd $args
-}
+function DH { D /ih $args }
 
-#=======================================================================================================================
+function DD { D /rd $args }
 
-function DDD
-{
-	D /id $args
-}
+function DDH { D /rd /ih $args }
 
-#=======================================================================================================================
+function DDD { D /id $args }
 
-function DDDH
-{
-	D /ihd $args
-}
+function DDDH { D /ihd $args }
 
-#=======================================================================================================================
+function BF { BEEP; FORE }
 
-function BF
-{
-	BEEP
-	FORE
-}
+function BFS { BEEP; FORE; SEND all ([System.Environment]::MachineName) is done }
 
-#=======================================================================================================================
+function MKLINK { CMD /c MKLINK $args }
 
-function BFS
-{
-	BEEP
-	FORE
-	SEND all ([System.Environment]::MachineName) is done
-}
+function CODE { CMD /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args }
 
-#=======================================================================================================================
+function GITHUB { CMD /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args }
 
-function MKLINK
-{
-	CMD /c MKLINK $args
-}
+function NPM { CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args }
 
-#=======================================================================================================================
-
-function CODE
-{
-	CMD /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Microsoft VS Code\bin\code.cmd") $args
-}
-
-#=======================================================================================================================
-
-function GITHUB
-{
-	CMD /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args
-}
-
-#=======================================================================================================================
-
-function NPM
-{
-	CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args
-}
-
-#=======================================================================================================================
-
-function NPX
-{
-	CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args
-}
+function NPX { CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args }
 
 #=======================================================================================================================
