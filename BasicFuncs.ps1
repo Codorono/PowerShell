@@ -301,6 +301,8 @@ function CODE { CMD /c (Join-Path (Get-KnownFolderPath "UserProgramFiles") "Micr
 
 function GITHUB { CMD /c (Join-Path (Get-KnownFolderPath "LocalAppData") "GitHubDesktop\bin\github.bat") $args }
 
+function DNX { CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "dotnet\dnx.cmd") $args }
+
 function NPM { CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npm.cmd") $args }
 
 function NPX { CMD /c (Join-Path (Get-KnownFolderPath "ProgramFiles") "nodejs\npx.cmd") $args }
