@@ -62,6 +62,13 @@ function Select-FolderItem
 
 #=======================================================================================================================
 
+function Clear-RecentItems
+{
+	[Win32.Shell32]::SHAddToRecentDocs(3, [System.IntPtr]::Zero)
+}
+
+#=======================================================================================================================
+
 Set-Variable "KF_FLAG_DEFAULT" 0x00000000 -Option Constant
 Set-Variable "KF_FLAG_CREATE" 0x00008000 -Option Constant
 Set-Variable "KF_FLAG_DONT_VERIFY" 0x00004000 -Option Constant
@@ -237,6 +244,9 @@ public static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] s
 [DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false, SetLastError = false)]
 public static extern void SHOpenFolderAndSelectItems(System.IntPtr pidlFolder, uint cidl,
 	[MarshalAs(UnmanagedType.LPArray)] System.IntPtr[] apidl, uint dwFlags);
+
+[DllImport("shell32.dll", ExactSpelling = true, SetLastError = false)]
+public static extern void SHAddToRecentDocs(uint flags, System.IntPtr pv);
 "@
 
 Add-Type -Name "Shell32" -MemberDefinition $MemberDefinition -Namespace "Win32"
